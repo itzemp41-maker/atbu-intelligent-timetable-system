@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Level - ATBU Timetable System</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Global ATBU CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     ADMIN LAYOUT
+===================================================== -->
+
+<div class="admin-layout">
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- Sidebar Header -->
+
+        <div class="sidebar-header">
+
+            <h4>
+                ATBU Timetable
+            </h4>
+
+            <span>
+                Administration Panel
+            </span>
+
+        </div>
+
+
+        <!-- Sidebar Navigation -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- Dashboard -->
+
+            <a
+                href="{{ url_for('main.admin_dashboard') }}"
+                class="nav-link"
+            >
+                📊 Dashboard
+            </a>
+
+
+            <!-- Departments -->
+
+            <a
+                href="{{ url_for('departments.index') }}"
+                class="nav-link"
+            >
+                🏢 Departments
+            </a>
+
+
+            <!-- Programmes -->
+
+            <a
+                href="{{ url_for('programmes.index') }}"
+                class="nav-link"
+            >
+                🎓 Programmes
+            </a>
+
+
+            <!-- Levels -->
+
+            <a
+                href="{{ url_for('levels.index') }}" class="nav-link"
+                style="
+                    background: #0b513b;
+                    color: #f2c94c;
+                "
+            >
+                📚 Levels
+            </a>
+
+
+            <!-- Courses -->
+
+            <a
+                href="{{ url_for('courses.index') }}"
+                class="nav-link"
+            >
+                📖 Courses
+            </a>
+
+
+            <!-- Lecturers -->
+
+            <a
+                href="{{ url_for('lecturers.index') }}"
+                class="nav-link"
+            >
+                👨‍🏫 Lecturers
+            </a>
+
+
+            <!-- Venues -->
+
+            <a
+                href="{{ url_for('venues.index') }}"
+                class="nav-link"
+            >
+                🏫 Venues
+            </a>
+
+
+            <!-- Time Slots -->
+
+            <a
+                href="{{ url_for('time_slots.index') }}"
+                class="nav-link"
+            >
+                🕒 Time Slots
+            </a>
+
+
+            <!-- Generate Timetable -->
+
+            <a
+                href="{{ url_for('timetable.generate') }}"
+                class="nav-link"
+            >
+                ⚙️ Generate Timetable
+            </a>
+
+
+        </nav>
+
+
+        <!-- Sidebar Bottom -->
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{{ url_for('auth.logout') }}"
+                class="logout-link"
+            >
+                🚪 Logout
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN WRAPPER
+    ================================================== -->
+
+    <div class="main-wrapper">
+
+
+        <!-- =================================================
+             TOP NAVBAR
+        ================================================== -->
+
+        <header class="top-navbar">
+
+
+            <div>
+
+                <strong>
+                    ATBU Timetable System
+                </strong>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <span>
+                    Welcome,
+                </span>
+
+                <strong>
+                    {{ current_user.username }}
+                </strong>
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <div class="page-header">
+
+
+                <div>
+
+                    <h2 class="page-title">
+                        Add Level
+                    </h2>
+
+                    <p class="page-subtitle">
+                        Create a new academic level and assign it to a programme.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('levels.index') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Back to Levels
+                </a>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FLASH MESSAGES
+            ================================================== -->
+
+            {% with messages = get_flashed_messages(
+                with_categories=true
+            ) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div
+                            class="alert alert-{{ category }} alert-dismissible fade show"
+                            role="alert"
+                        >
+
+                            {{ message }}
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                            ></button>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+
+            <!-- =================================================
+                 FORM CARD
+            ================================================== -->
+
+            <div class="content-card">
+
+
+                <!-- Card Header -->
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h5>
+                            📚 Level Information
+                        </h5>
+
+                        <p>
+                            Enter the academic level details below.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Card Body -->
+
+                <div class="content-card-body">
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('levels.add') }}"
+                    >
+
+
+                        <!-- =================================================
+                             LEVEL NAME
+                        ================================================== -->
+
+                        <div class="form-group">
+
+                            <label
+                                for="name"
+                                class="form-label"
+                            >
+
+                                Level
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                class="custom-input"
+                                id="name"
+                                name="name"
+                                placeholder="e.g. 100 Level"
+                                value="{{ request.form.get('name', '') }}"
+                                required
+                            >
+
+
+                            <small class="form-help">
+                                Enter the academic level, for example:
+                                100 Level, 200 Level, 300 Level, etc.
+                            </small>
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             PROGRAMME
+                        ================================================== -->
+
+                        <div class="form-group">
+
+                            <label
+                                for="programme_id"
+                                class="form-label"
+                            >
+
+                                Programme
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <select
+                                class="custom-input"
+                                id="programme_id"
+                                name="programme_id"
+                                required
+                            >
+
+                                <option value="">
+                                    -- Select Programme --
+                                </option>
+
+
+                                {% for programme in programmes %}
+
+                                    <option
+                                        value="{{ programme.id }}"
+                                        {% if request.form.get('programme_id') == programme.id|string %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        {{ programme.name }}
+
+                                        {% if programme.department %}
+
+                                            -
+                                            {{ programme.department.name }}
+
+                                        {% endif %}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+
+                            <small class="form-help">
+                                Select the programme to which this academic
+                                level belongs.
+                            </small>
+
+
+                            {% if not programmes %}
+
+                                <div class="alert alert-warning mt-3">
+
+                                    <strong>
+                                        No programmes available.
+                                    </strong>
+
+                                    <br>
+
+                                    You need to create a programme before
+                                    adding a level.
+
+                                    <br><br>
+
+                                    <a
+                                        href="{{ url_for('programmes.add') }}"
+                                        class="btn btn-sm btn-warning"
+                                    >
+                                        + Add Programme
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             FORM ACTIONS
+                        ================================================== -->
+
+                        <div class="form-actions">
+
+
+                            <a
+                                href="{{ url_for('levels.index') }}"
+                                class="btn btn-secondary"
+                            >
+                                ← Cancel
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                {% if not programmes %}
+                                    disabled
+                                {% endif %}
+                            >
+                                ✓ Add Level
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 INFORMATION BOX
+            ================================================== -->
+
+            <div class="info-box mt-4">
+
+
+                <div class="info-icon">
+                    i
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Level Information
+                    </strong>
+
+                    <p>
+                        Each academic level must be associated with an
+                        existing programme. For example, a Computer Science
+                        programme may contain 100 Level, 200 Level, 300 Level,
+                        400 Level and 500 Level.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="admin-footer">
+
+
+            <div class="footer-content">
+
+
+                <!-- Brand -->
+
+                <div class="footer-brand">
+
+                    <h5>
+                        ATBU Timetable System
+                    </h5>
+
+                    <p>
+                        Intelligent Automated Timetable Generation System
+                        designed to improve academic scheduling and timetable
+                        management at Abubakar Tafawa Balewa University.
+                    </p>
+
+                </div>
+
+
+
+                <!-- Quick Links -->
+
+                <div class="footer-links">
+
+                    <h6>
+                        Quick Links
+                    </h6>
+
+                    <a
+                        href="{{ url_for('main.admin_dashboard') }}"
+                    >
+                        Dashboard
+                    </a>
+
+                    <a
+                        href="{{ url_for('departments.index') }}"
+                    >
+                        Departments
+                    </a>
+
+                    <a
+                        href="{{ url_for('programmes.index') }}"
+                    >
+                        Programmes
+                    </a>
+
+                    <a
+                        href="{{ url_for('levels.index') }}"
+                    >
+                        Levels
+                    </a>
+
+                </div>
+
+
+
+                <!-- University Information -->
+
+                <div class="footer-info">
+
+                    <h6>
+                        University
+                    </h6>
+
+                    <p>
+                        Abubakar Tafawa Balewa University
+                    </p>
+
+                    <p>
+                        Bauchi, Nigeria
+                    </p>
+
+                    <p>
+                        ATBU Timetable Administration
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Footer Bottom -->
+
+            <div class="footer-bottom">
+
+                <p>
+                    © 2026 ATBU Timetable System. All Rights Reserved.
+                </p>
+
+                <p>
+                    Intelligent Timetable Generation System
+                </p>
+
+            </div>
+
+
+        </footer>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     BOOTSTRAP JAVASCRIPT
+===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+</body>
+
+</html>

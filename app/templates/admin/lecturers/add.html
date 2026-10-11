@@ -1,0 +1,259 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Add Lecturer - ATBU Timetable{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+        <h2 class="page-title">
+            Add Lecturer
+        </h2>
+
+        <p class="page-subtitle">
+            Add a university lecturer and assign them to a department.
+        </p>
+    </div>
+
+    <a
+        href="{{ url_for('lecturers.index') }}"
+        class="btn btn-secondary"
+    >
+        ← Back to Lecturers
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     FORM CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <!-- CARD HEADER -->
+
+    <div class="content-card-header">
+
+        <div>
+
+            <h5>
+                Lecturer Information
+            </h5>
+
+            <p>
+                Enter the lecturer's details below.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CARD BODY -->
+
+    <div class="content-card-body">
+
+        <form method="POST">
+
+
+            <!-- =================================================
+                 STAFF ID
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="staff_id"
+                    class="form-label"
+                >
+                    Staff ID
+                </label>
+
+                <input
+                    type="text"
+                    class="custom-input"
+                    id="staff_id"
+                    name="staff_id"
+                    placeholder="e.g. ATBU/CS/001"
+                >
+
+                <small class="form-help">
+                    Staff ID is optional.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 LECTURER NAME
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="name"
+                    class="form-label"
+                >
+                    Lecturer Name
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    class="custom-input"
+                    id="name"
+                    name="name"
+                    placeholder="Enter lecturer full name"
+                    required
+                >
+
+                <small class="form-help">
+                    Enter the lecturer's full name.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 DEPARTMENT
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="department_id"
+                    class="form-label"
+                >
+                    Department
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    class="custom-input"
+                    id="department_id"
+                    name="department_id"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Department --
+                    </option>
+
+                    {% for department in departments %}
+
+                        <option value="{{ department.id }}">
+
+                            {{ department.name }}
+
+                            {% if department.code %}
+                                ({{ department.code }})
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <small class="form-help">
+                    Select the department where the lecturer belongs.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('lecturers.index') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    ✓ Add Lecturer
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     INFORMATION BOX
+========================================================= -->
+
+<div class="info-box mt-4">
+
+    <div class="info-icon">
+        i
+    </div>
+
+    <div>
+
+        <strong>
+            Lecturer Information
+        </strong>
+
+        <p>
+            Make sure the lecturer's name and department are entered
+            correctly. The lecturer will be available for course and
+            timetable assignment after registration.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

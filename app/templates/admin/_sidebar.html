@@ -1,0 +1,240 @@
+<nav class="sidebar-nav">
+
+
+    <!-- DASHBOARD -->
+
+    <a
+        href="{{ url_for('main.admin_dashboard') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ▣
+        </span>
+
+        <span>
+            Dashboard
+        </span>
+
+    </a>
+
+
+
+    <!-- ACADEMIC STRUCTURE -->
+
+    <div class="nav-section-title">
+        ACADEMIC STRUCTURE
+    </div>
+
+
+    <a
+        href="{{ url_for('departments.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ▦
+        </span>
+
+        <span>
+            Departments
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('programmes.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ▤
+        </span>
+
+        <span>
+            Programmes
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('levels.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ≡
+        </span>
+
+        <span>
+            Levels
+        </span>
+
+    </a>
+
+
+
+    <!-- ACADEMIC RESOURCES -->
+
+    <div class="nav-section-title">
+        ACADEMIC RESOURCES
+    </div>
+
+
+    <a
+        href="{{ url_for('courses.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ◈
+        </span>
+
+        <span>
+            Courses
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('lecturers.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ♙
+        </span>
+
+        <span>
+            Lecturers
+        </span>
+
+    </a>
+
+    <a
+        href="{{ url_for('course_offerings.index') }}"
+        class="nav-link">
+
+        <i class="bi bi-journal-text"></i>
+
+        <span>
+            Course Offerings
+        </span>
+
+    </a>
+
+    <a
+        href="{{ url_for('venues.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ▣
+        </span>
+
+        <span>
+            Venues
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('time_slots.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ◷
+        </span>
+
+        <span>
+            Time Slots
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('semesters.index') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ◫
+        </span>
+
+        <span>
+            Semesters
+        </span>
+
+    </a>
+
+
+
+    <!-- TIMETABLE -->
+
+    <div class="nav-section-title">
+        TIMETABLE
+    </div>
+
+
+    <a
+        href="#"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ▦
+        </span>
+
+        <span>
+            Generate Timetable
+        </span>
+
+    </a>
+
+
+    <a
+        href="#"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ▤
+        </span>
+
+        <span>
+            View Timetable
+        </span>
+
+    </a>
+
+
+
+    <!-- LOGOUT -->
+
+    <div class="sidebar-bottom">
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="nav-link logout-link"
+        >
+
+            <span class="nav-icon">
+                ⇥
+            </span>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </div>
+
+
+</nav>

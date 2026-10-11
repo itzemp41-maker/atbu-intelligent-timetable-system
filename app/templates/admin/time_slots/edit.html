@@ -1,0 +1,289 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Edit Time Slot - ATBU Timetable
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Edit Time Slot
+        </h2>
+
+        <p class="page-subtitle">
+            Update the timetable time slot information.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     EDIT TIME SLOT CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <!-- CARD HEADER -->
+
+    <div class="content-card-header">
+
+        <div>
+
+            <h5>
+                Edit Time Slot
+            </h5>
+
+            <p>
+                Modify the day and time range for this timetable slot.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CARD BODY -->
+
+    <div class="content-card-body">
+
+        <form method="POST">
+
+
+            <!-- =================================================
+                 DAY
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="day"
+                    class="form-label"
+                >
+                    Day
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    name="day"
+                    id="day"
+                    class="custom-input"
+                    required
+                >
+
+                    <option value="">
+                        Select Day
+                    </option>
+
+                    <option
+                        value="Monday"
+                        {% if time_slot.day == "Monday" %}
+                            selected
+                        {% endif %}
+                    >
+                        Monday
+                    </option>
+
+                    <option
+                        value="Tuesday"
+                        {% if time_slot.day == "Tuesday" %}
+                            selected
+                        {% endif %}
+                    >
+                        Tuesday
+                    </option>
+
+                    <option
+                        value="Wednesday"
+                        {% if time_slot.day == "Wednesday" %}
+                            selected
+                        {% endif %}
+                    >
+                        Wednesday
+                    </option>
+
+                    <option
+                        value="Thursday"
+                        {% if time_slot.day == "Thursday" %}
+                            selected
+                        {% endif %}
+                    >
+                        Thursday
+                    </option>
+
+                    <option
+                        value="Friday"
+                        {% if time_slot.day == "Friday" %}
+                            selected
+                        {% endif %}
+                    >
+                        Friday
+                    </option>
+
+                </select>
+
+                <small class="form-help">
+                    Select the day for this timetable period.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 START TIME
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="start_time"
+                    class="form-label"
+                >
+                    Start Time
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="time"
+                    name="start_time"
+                    id="start_time"
+                    class="custom-input"
+                    value="{{ time_slot.start_time.strftime('%H:%M') }}"
+                    required
+                >
+
+                <small class="form-help">
+                    Set the starting time for this period.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 END TIME
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="end_time"
+                    class="form-label"
+                >
+                    End Time
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="time"
+                    name="end_time"
+                    id="end_time"
+                    class="custom-input"
+                    value="{{ time_slot.end_time.strftime('%H:%M') }}"
+                    required
+                >
+
+                <small class="form-help">
+                    Set the ending time for this period.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 INFORMATION BOX
+            ================================================== -->
+
+            <div class="info-box mb-4">
+
+                <div class="info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Time Slot Information
+                    </strong>
+
+                    <p>
+                        Ensure that the start time is earlier than the end
+                        time and that the updated period does not conflict
+                        with other timetable slots.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('time_slots.index') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Update Time Slot
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2>Edit Venue</h2>
+        <p class="text-muted">
+            Update venue information.
+        </p>
+    </div>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Venue Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        value="{{ venue.name }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Capacity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="capacity"
+                        class="form-control"
+                        min="1"
+                        value="{{ venue.capacity }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Venue Type
+                    </label>
+
+                    <select
+                        name="venue_type"
+                        class="form-select"
+                    >
+
+                        <option value="Classroom"
+                            {% if venue.venue_type == "Classroom" %}selected{% endif %}>
+                            Classroom
+                        </option>
+
+                        <option value="Lecture Theatre"
+                            {% if venue.venue_type == "Lecture Theatre" %}selected{% endif %}>
+                            Lecture Theatre
+                        </option>
+
+                        <option value="Laboratory"
+                            {% if venue.venue_type == "Laboratory" %}selected{% endif %}>
+                            Laboratory
+                        </option>
+
+                        <option value="Hall"
+                            {% if venue.venue_type == "Hall" %}selected{% endif %}>
+                            Hall
+                        </option>
+
+                        <option value="Seminar Room"
+                            {% if venue.venue_type == "Seminar Room" %}selected{% endif %}>
+                            Seminar Room
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Update Venue
+                </button>
+
+                <a
+                    href="{{ url_for('venues.index') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,262 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Add Time Slot - ATBU Timetable
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Add Time Slot
+        </h2>
+
+        <p class="page-subtitle">
+            Create a new timetable time slot.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     TIME SLOT FORM CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <!-- CARD HEADER -->
+
+    <div class="content-card-header">
+
+        <div>
+
+            <h5>
+                Time Slot Information
+            </h5>
+
+            <p>
+                Enter the day and time range for this timetable slot.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CARD BODY -->
+
+    <div class="content-card-body">
+
+        <form method="POST">
+
+
+            <!-- =================================================
+                 DAY
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="day"
+                    class="form-label"
+                >
+                    Day
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    name="day"
+                    id="day"
+                    class="custom-input"
+                    required
+                >
+
+                    <option value="">
+                        Select Day
+                    </option>
+
+                    <option value="Monday">
+                        Monday
+                    </option>
+
+                    <option value="Tuesday">
+                        Tuesday
+                    </option>
+
+                    <option value="Wednesday">
+                        Wednesday
+                    </option>
+
+                    <option value="Thursday">
+                        Thursday
+                    </option>
+
+                    <option value="Friday">
+                        Friday
+                    </option>
+
+                </select>
+
+                <small class="form-help">
+                    Select the day on which this time slot will be available.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 START TIME
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="start_time"
+                    class="form-label"
+                >
+                    Start Time
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="time"
+                    name="start_time"
+                    id="start_time"
+                    class="custom-input"
+                    required
+                >
+
+                <small class="form-help">
+                    Enter the starting time for the slot.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 END TIME
+            ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="end_time"
+                    class="form-label"
+                >
+                    End Time
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="time"
+                    name="end_time"
+                    id="end_time"
+                    class="custom-input"
+                    required
+                >
+
+                <small class="form-help">
+                    Enter the ending time for the slot.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 INFORMATION BOX
+            ================================================== -->
+
+            <div class="info-box mb-4">
+
+                <div class="info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Time Slot Information
+                    </strong>
+
+                    <p>
+                        Make sure the start time is earlier than the end
+                        time and that the slot does not conflict with
+                        existing timetable periods.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('time_slots.index') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Time Slot
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Generate Timetable | ATBU Intelligent Timetable System</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            font-family:
+                "Segoe UI",
+                Tahoma,
+                Geneva,
+                Verdana,
+                sans-serif;
+
+            background: #f4f7f6;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           ATBU VARIABLES
+        ========================================================= */
+
+        :root {
+            --atbu-green: #075c3a;
+            --atbu-dark-green: #043d27;
+            --atbu-light-green: #e8f4ee;
+            --atbu-accent: #0b7a4b;
+            --atbu-gold: #d6a72c;
+
+            --background: #f4f7f6;
+            --white: #ffffff;
+
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+
+            --border: #e5e7eb;
+
+            --sidebar-width: 255px;
+        }
+
+
+        /* =========================================================
+           MAIN APPLICATION LAYOUT
+        ========================================================= */
+
+        .admin-layout {
+            min-height: 100vh;
+            width: 100%;
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .sidebar {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            bottom: 0;
+
+            width: var(--sidebar-width);
+
+            background:
+                linear-gradient(
+                    180deg,
+                    var(--atbu-dark-green),
+                    var(--atbu-green)
+                );
+
+            color: white;
+
+            z-index: 1050;
+
+            display: flex;
+            flex-direction: column;
+
+            box-shadow:
+                3px 0 15px rgba(0, 0, 0, 0.10);
+
+            transition:
+                transform 0.3s ease;
+        }
+
+
+        /* =========================================================
+           SIDEBAR HEADER
+        ========================================================= */
+
+        .sidebar-header {
+            min-height: 82px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 18px 20px;
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            color: white;
+
+            width: 100%;
+        }
+
+        .sidebar-logo-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            background: rgba(255, 255, 255, 0.12);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.18);
+
+            border-radius: 10px;
+
+            font-size: 21px;
+        }
+
+        .sidebar-logo-text {
+            min-width: 0;
+        }
+
+        .sidebar-logo-text strong {
+            display: block;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: rgba(255, 255, 255, 0.68);
+
+            font-size: 10px;
+        }
+
+
+        /* =========================================================
+           SIDEBAR CLOSE BUTTON
+        ========================================================= */
+
+        .sidebar-close {
+            display: none;
+
+            margin-left: auto;
+
+            width: 36px;
+            height: 36px;
+
+            border: none;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            color: white;
+
+            border-radius: 8px;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+        .sidebar-close:hover {
+            background:
+                rgba(255, 255, 255, 0.18);
+        }
+
+
+        /* =========================================================
+           SIDEBAR NAVIGATION
+        ========================================================= */
+
+        .sidebar-nav {
+            flex: 1;
+
+            padding: 18px 12px;
+
+            overflow-y: auto;
+        }
+
+        .sidebar-section-title {
+            padding:
+                8px 12px 7px;
+
+            color:
+                rgba(255, 255, 255, 0.48);
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.8px;
+        }
+
+        .sidebar-link {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            width: 100%;
+
+            padding: 11px 13px;
+
+            margin-bottom: 4px;
+
+            color:
+                rgba(255, 255, 255, 0.78);
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .sidebar-link i {
+            width: 19px;
+
+            text-align: center;
+
+            font-size: 16px;
+        }
+
+        .sidebar-link:hover {
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            transform: translateX(2px);
+        }
+
+        .sidebar-link.active {
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+            box-shadow:
+                inset 3px 0 0 var(--atbu-gold);
+        }
+
+
+        /* =========================================================
+           SIDEBAR BOTTOM
+        ========================================================= */
+
+        .sidebar-bottom {
+            padding: 14px 12px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .logout-link {
+            color:
+                rgba(255, 255, 255, 0.78);
+        }
+
+        .logout-link:hover {
+            color: #fff;
+            background: rgba(220, 53, 69, 0.16);
+        }
+
+
+        /* =========================================================
+           MOBILE SIDEBAR OVERLAY
+        ========================================================= */
+
+        .sidebar-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.48);
+
+            z-index: 1040;
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        /* =========================================================
+           MAIN AREA
+        ========================================================= */
+
+        .main-area {
+            margin-left: var(--sidebar-width);
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        /* =========================================================
+           TOP NAVBAR
+        ========================================================= */
+
+        .top-navbar {
+            height: 70px;
+
+            background: white;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 28px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 900;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .top-navbar-left {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .top-page-title {
+            color: var(--text-dark);
+
+            font-size: 16px;
+
+            font-weight: 700;
+        }
+
+        .top-page-subtitle {
+            color: var(--text-muted);
+
+            font-size: 11px;
+
+            margin-top: 2px;
+        }
+
+
+        /* =========================================================
+           HAMBURGER
+        ========================================================= */
+
+        .hamburger-btn {
+            display: none;
+
+            width: 42px;
+            height: 42px;
+
+            border: 1px solid var(--border);
+
+            background: white;
+
+            color: var(--atbu-green);
+
+            border-radius: 8px;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: var(--atbu-light-green);
+
+            border-color:
+                #c9dfd3;
+        }
+
+
+        /* =========================================================
+           USER AREA
+        ========================================================= */
+
+        .user-area {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: var(--atbu-light-green);
+
+            color: var(--atbu-green);
+
+            border-radius: 50%;
+
+            font-size: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info strong {
+            display: block;
+
+            color: var(--text-dark);
+
+            font-size: 12px;
+        }
+
+        .user-info span {
+            display: block;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+        }
+
+        .logout-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 6px;
+
+            padding:
+                8px 12px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 7px;
+
+            background: white;
+
+            color: #6b7280;
+
+            font-size: 11px;
+
+            transition: 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            color: #dc3545;
+
+            border-color:
+                #f1b7bd;
+
+            background:
+                #fff7f8;
+        }
+
+
+        /* =========================================================
+           PAGE CONTENT
+        ========================================================= */
+
+        .page-content {
+            flex: 1;
+
+            padding:
+                30px;
+        }
+
+        .page-container {
+            width: 100%;
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+        }
+
+
+        /* =========================================================
+           GENERATE PAGE
+        ========================================================= */
+
+        .generate-page {
+            width: 100%;
+        }
+
+
+        /* =========================================================
+           PAGE HEADER
+        ========================================================= */
+
+        .generate-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+        }
+
+        .generate-title-area {
+            min-width: 0;
+        }
+
+        .generate-title-area h2 {
+            margin: 0;
+
+            color: #063b2a;
+
+            font-size: 28px;
+
+            font-weight: 700;
+        }
+
+        .generate-title-area p {
+            margin: 7px 0 0;
+
+            color: #718096;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           BACK BUTTON
+        ========================================================= */
+
+        .back-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            padding:
+                10px 16px;
+
+            background: white;
+
+            color: #063b2a;
+
+            border:
+                1px solid #d7dfdb;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            transition: 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #f1f7f4;
+
+            color: #063b2a;
+
+            border-color: #063b2a;
+        }
+
+
+        /* =========================================================
+           MAIN GRID
+        ========================================================= */
+
+        .generator-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 2fr)
+                minmax(300px, 1fr);
+
+            gap: 22px;
+
+            align-items: start;
+        }
+
+
+        /* =========================================================
+           CARDS
+        ========================================================= */
+
+        .generator-card,
+        .resource-card {
+            background: white;
+
+            border:
+                1px solid #e4e8eb;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+
+        /* =========================================================
+           GENERATOR CARD HEADER
+        ========================================================= */
+
+        .generator-card-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding:
+                20px 24px;
+
+            border-bottom:
+                1px solid #e8ecea;
+        }
+
+        .generator-icon {
+            width: 50px;
+            height: 50px;
+
+            min-width: 50px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #eef8f3;
+
+            color: #063b2a;
+
+            border-radius: 10px;
+
+            font-size: 22px;
+        }
+
+        .generator-card-header h5 {
+            margin: 0;
+
+            color: #063b2a;
+
+            font-size: 17px;
+
+            font-weight: 700;
+        }
+
+        .generator-card-header p {
+            margin: 5px 0 0;
+
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           CARD BODY
+        ========================================================= */
+
+        .generator-card-body {
+            padding: 25px;
+        }
+
+
+        /* =========================================================
+           INFO BOX
+        ========================================================= */
+
+        .generator-info {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 14px;
+
+            padding: 18px;
+
+            background: #eef8f3;
+
+            border:
+                1px solid #cce9da;
+
+            border-left:
+                4px solid #198754;
+
+            border-radius: 9px;
+
+            margin-bottom: 25px;
+        }
+
+        .generator-info-icon {
+            width: 32px;
+            height: 32px;
+
+            min-width: 32px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #198754;
+
+            color: white;
+
+            border-radius: 50%;
+
+            font-weight: 700;
+        }
+
+        .generator-info strong {
+            display: block;
+
+            color: #123b2a;
+
+            font-size: 14px;
+
+            margin-bottom: 5px;
+        }
+
+        .generator-info p {
+            margin: 0;
+
+            color: #52645b;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           SECTION TITLE
+        ========================================================= */
+
+        .generator-section-title {
+            margin-bottom: 15px;
+
+            color: #063b2a;
+
+            font-size: 15px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
+
+        .generation-features {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+
+            margin-bottom: 25px;
+        }
+
+        .generation-feature {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 14px;
+
+            background: white;
+
+            border:
+                1px solid #e5eae7;
+
+            border-radius: 8px;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .generation-feature:hover {
+            transform: translateY(-2px);
+
+            border-color: #cddbd4;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+
+            min-width: 36px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #f1f7f4;
+
+            color: #063b2a;
+
+            border-radius: 7px;
+        }
+
+        .feature-text {
+            min-width: 0;
+        }
+
+        .feature-text strong {
+            display: block;
+
+            color: #34423b;
+
+            font-size: 13px;
+
+            margin-bottom: 3px;
+        }
+
+        .feature-text span {
+            display: block;
+
+            color: #7a8580;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+        }
+
+
+        /* =========================================================
+           ALGORITHM BOX
+        ========================================================= */
+
+        .algorithm-box {
+            padding: 15px;
+
+            background: #f7f9f8;
+
+            border:
+                1px solid #e4e9e6;
+
+            border-radius: 8px;
+
+            margin-bottom: 22px;
+        }
+
+        .algorithm-box strong {
+            display: block;
+
+            color: #063b2a;
+
+            font-size: 13px;
+
+            margin-bottom: 5px;
+        }
+
+        .algorithm-box p {
+            margin: 0;
+
+            color: #68756f;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           GENERATION ACTION
+        ========================================================= */
+
+        .generate-action {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid #edf0ee;
+        }
+
+        .generate-action-text {
+            min-width: 0;
+        }
+
+        .generate-action-text strong {
+            display: block;
+
+            color: #123b2a;
+
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+        .generate-action-text span {
+            color: #718096;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================================
+           GENERATE BUTTON
+        ========================================================= */
+
+        .generate-button {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            min-width: 205px;
+
+            padding:
+                12px 20px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #063b2a;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .generate-button:hover:not(:disabled) {
+            background: #0b513b;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 5px 12px rgba(6, 59, 42, 0.2);
+        }
+
+        .generate-button:disabled {
+            background: #94a39d;
+
+            cursor: not-allowed;
+
+            transform: none;
+
+            box-shadow: none;
+        }
+
+
+        /* =========================================================
+           RIGHT SIDE
+        ========================================================= */
+
+        .generator-side {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 18px;
+        }
+
+
+        /* =========================================================
+           RESOURCE HEADER
+        ========================================================= */
+
+        .resource-card-header {
+            padding:
+                17px 20px;
+
+            border-bottom:
+                1px solid #e9eeeb;
+        }
+
+        .resource-card-header h5 {
+            margin: 0;
+
+            color: #063b2a;
+
+            font-size: 15px;
+
+            font-weight: 700;
+        }
+
+        .resource-card-header p {
+            margin: 5px 0 0;
+
+            color: #718096;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           RESOURCE BODY
+        ========================================================= */
+
+        .resource-card-body {
+            padding:
+                18px 20px;
+        }
+
+
+        /* =========================================================
+           RESOURCE ITEMS
+        ========================================================= */
+
+        .resource-item {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 12px 0;
+
+            border-bottom:
+                1px solid #edf0ee;
+        }
+
+        .resource-item:first-child {
+            padding-top: 0;
+        }
+
+        .resource-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .resource-name {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #495057;
+
+            font-size: 13px;
+        }
+
+        .resource-name i {
+            width: 17px;
+
+            color: #063b2a;
+
+            text-align: center;
+        }
+
+        .resource-count {
+            min-width: 34px;
+
+            padding:
+                5px 9px;
+
+            border-radius: 15px;
+
+            background: #eef8f3;
+
+            color: #198754;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-align: center;
+        }
+
+
+        /* =========================================================
+           WARNING
+        ========================================================= */
+
+        .resource-warning {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 10px;
+
+            margin-top: 18px;
+
+            padding: 12px;
+
+            background: #fff8df;
+
+            border:
+                1px solid #f3df91;
+
+            border-left:
+                3px solid #f2c94c;
+
+            border-radius: 7px;
+
+            color: #7a5b00;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================================
+           READY STATUS
+        ========================================================= */
+
+        .resource-ready {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            margin-top: 18px;
+
+            padding: 12px;
+
+            background: #eef8f3;
+
+            border:
+                1px solid #cce9da;
+
+            border-radius: 7px;
+
+            color: #176b43;
+
+            font-size: 12px;
+        }
+
+        .resource-ready i {
+            font-size: 15px;
+        }
+
+
+        /* =========================================================
+           CONSTRAINTS
+        ========================================================= */
+
+        .constraint-list {
+            list-style: none;
+
+            padding: 0;
+
+            margin: 0;
+        }
+
+        .constraint-list li {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 9px;
+
+            margin-bottom: 13px;
+
+            color: #52645b;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+        .constraint-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .constraint-list i {
+            color: #198754;
+
+            margin-top: 2px;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .site-footer {
+            padding:
+                18px 30px;
+
+            background: white;
+
+            border-top:
+                1px solid var(--border);
+
+            color: var(--text-muted);
+
+            font-size: 11px;
+
+            text-align: center;
+        }
+
+        .site-footer strong {
+            color: var(--atbu-green);
+        }
+
+
+        /* =========================================================
+           SPINNER
+        ========================================================= */
+
+        .generate-spinner {
+            animation:
+                timetableSpin 1s linear infinite;
+        }
+
+        @keyframes timetableSpin {
+
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            :root {
+                --sidebar-width: 220px;
+            }
+
+            .generator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .generator-side {
+                display: grid;
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                align-items: start;
+            }
+
+            .page-content {
+                padding: 24px;
+            }
+
+        }
+
+
+        /* =========================================================
+           MOBILE / HAMBURGER MODE
+        ========================================================= */
+
+        @media (max-width: 768px) {
+
+            /* ---------------------------------------------
+               HIDE SIDEBAR OFF SCREEN
+            --------------------------------------------- */
+
+            .sidebar {
+                width: 280px;
+
+                transform:
+                    translateX(-100%);
+
+                box-shadow:
+                    5px 0 25px rgba(0, 0, 0, 0.20);
+            }
+
+            .sidebar.sidebar-open {
+                transform:
+                    translateX(0);
+            }
+
+            .sidebar-close {
+                display: flex;
+
+                align-items: center;
+                justify-content: center;
+            }
+
+
+            /* ---------------------------------------------
+               MAIN AREA FULL WIDTH
+            --------------------------------------------- */
+
+            .main-area {
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            /* ---------------------------------------------
+               HAMBURGER
+            --------------------------------------------- */
+
+            .hamburger-btn {
+                display: flex;
+            }
+
+
+            /* ---------------------------------------------
+               TOP NAVBAR
+            --------------------------------------------- */
+
+            .top-navbar {
+                height: 64px;
+
+                padding:
+                    0 16px;
+            }
+
+            .top-page-title {
+                font-size: 14px;
+            }
+
+            .top-page-subtitle {
+                display: none;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .logout-btn {
+                display: none;
+            }
+
+
+            /* ---------------------------------------------
+               PAGE CONTENT
+            --------------------------------------------- */
+
+            .page-content {
+                padding: 20px 15px;
+            }
+
+
+            /* ---------------------------------------------
+               HEADER
+            --------------------------------------------- */
+
+            .generate-header {
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 15px;
+            }
+
+            .generate-title-area h2 {
+                font-size: 24px;
+            }
+
+            .generate-title-area p {
+                font-size: 13px;
+            }
+
+            .back-btn {
+                width: 100%;
+            }
+
+
+            /* ---------------------------------------------
+               GENERATOR CARD
+            --------------------------------------------- */
+
+            .generator-card-body {
+                padding: 20px;
+            }
+
+            .generation-features {
+                grid-template-columns: 1fr;
+            }
+
+            .generate-action {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .generate-button {
+                width: 100%;
+            }
+
+            .generator-side {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 480px) {
+
+            .sidebar {
+                width: 85vw;
+
+                max-width: 290px;
+            }
+
+            .top-navbar {
+                padding:
+                    0 12px;
+            }
+
+            .hamburger-btn {
+                width: 39px;
+                height: 39px;
+            }
+
+            .user-avatar {
+                width: 34px;
+                height: 34px;
+
+                font-size: 14px;
+            }
+
+            .page-content {
+                padding:
+                    16px 10px;
+            }
+
+            .generate-title-area h2 {
+                font-size: 21px;
+            }
+
+            .generate-title-area p {
+                font-size: 12px;
+            }
+
+            .generator-card-header {
+                padding: 16px;
+            }
+
+            .generator-card-body {
+                padding: 16px;
+            }
+
+            .generator-icon {
+                width: 44px;
+                height: 44px;
+
+                min-width: 44px;
+
+                font-size: 19px;
+            }
+
+            .generator-card-header h5 {
+                font-size: 15px;
+            }
+
+            .generator-card-header p {
+                font-size: 11px;
+            }
+
+            .generator-info {
+                padding: 14px;
+            }
+
+            .generator-info p {
+                font-size: 12px;
+            }
+
+            .resource-card-header {
+                padding: 15px;
+            }
+
+            .resource-card-body {
+                padding: 16px;
+            }
+
+            .site-footer {
+                padding:
+                    15px 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="adminSidebar"
+    >
+
+        <div class="sidebar-header">
+
+            <a
+                href="{{ url_for('main.admin_dashboard') }}"
+                class="sidebar-logo"
+            >
+
+                <div class="sidebar-logo-icon">
+                    <i class="bi bi-calendar3"></i>
+                </div>
+
+                <div class="sidebar-logo-text">
+
+                    <strong>
+                        ATBU Timetable
+                    </strong>
+
+                    <span>
+                        Intelligent Scheduling System
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <!-- Mobile close -->
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+                aria-label="Close navigation"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             NAVIGATION
+        ================================================== -->
+
+        <nav class="sidebar-nav">
+
+            <div class="sidebar-section-title">
+                Main
+            </div>
+
+
+            <a
+                href="{{ url_for('main.admin_dashboard') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <div class="sidebar-section-title">
+                Academic Setup
+            </div>
+
+
+            <a
+                href="{{ url_for('departments.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-diagram-3"></i>
+                <span>Departments</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('programmes.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-mortarboard"></i>
+                <span>Programmes</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('levels.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-layers"></i>
+                <span>Levels</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('courses.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-book"></i>
+                <span>Courses</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('lecturers.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-person-badge"></i>
+                <span>Lecturers</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('venues.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-building"></i>
+                <span>Venues</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('time_slots.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-clock"></i>
+                <span>Time Slots</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('semesters.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar3"></i>
+                <span>Semesters</span>
+            </a>
+
+
+            <div class="sidebar-section-title">
+                Timetable
+            </div>
+
+
+            <a
+                href="{{ url_for('timetable.generate') }}"
+                class="sidebar-link active"
+            >
+                <i class="bi bi-magic"></i>
+                <span>Generate Timetable</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('timetable.index') }}"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar-week"></i>
+                <span>View Timetable</span>
+            </a>
+
+        </nav>
+
+
+        <!-- =================================================
+             SIDEBAR BOTTOM
+        ================================================== -->
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{{ url_for('auth.logout') }}"
+                class="sidebar-link logout-link"
+            >
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         OVERLAY
+    ====================================================== -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <!-- =====================================================
+         MAIN AREA
+    ====================================================== -->
+
+    <main class="main-area">
+
+
+        <!-- =================================================
+             TOP NAVBAR
+        ================================================== -->
+
+        <header class="top-navbar">
+
+            <div class="top-navbar-left">
+
+
+                <!-- HAMBURGER -->
+
+                <button
+                    type="button"
+                    class="hamburger-btn"
+                    id="hamburgerBtn"
+                    aria-label="Open navigation"
+                    aria-expanded="false"
+                >
+                    <i class="bi bi-list"></i>
+                </button>
+
+
+                <div>
+
+                    <div class="top-page-title">
+                        Generate Timetable
+                    </div>
+
+                    <div class="top-page-subtitle">
+                        ATBU Intelligent Timetable Management System
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- USER -->
+
+            <div class="user-area">
+
+                <div class="user-avatar">
+                    <i class="bi bi-person"></i>
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        {{ current_user.username }}
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+                <a
+                    href="{{ url_for('auth.logout') }}"
+                    class="logout-btn"
+                >
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+        <section class="page-content">
+
+            <div class="page-container">
+
+
+                <!-- =================================================
+                     YOUR MAIN GENERATE TIMETABLE SECTION
+                ================================================== -->
+
+                <div class="generate-page">
+
+
+                    <!-- PAGE HEADER -->
+
+                    <div class="generate-header">
+
+                        <div class="generate-title-area">
+
+                            <h2>
+                                Generate Timetable
+                            </h2>
+
+                            <p>
+                                Create an intelligent and conflict-free
+                                academic timetable for the Computer Science
+                                Department.
+                            </p>
+
+                        </div>
+
+
+                        <a
+                            href="{{ url_for('timetable.index') }}"
+                            class="back-btn"
+                        >
+
+                            <i class="bi bi-calendar-week"></i>
+
+                            View Timetable
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         MAIN GRID
+                    ================================================== -->
+
+                    <div class="generator-grid">
+
+
+                        <!-- =================================================
+                             GENERATOR CARD
+                        ================================================== -->
+
+                        <div class="generator-card">
+
+
+                            <!-- CARD HEADER -->
+
+                            <div class="generator-card-header">
+
+                                <div class="generator-icon">
+
+                                    <i class="bi bi-magic"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h5>
+                                        Intelligent Timetable Generator
+                                    </h5>
+
+                                    <p>
+                                        Automated academic scheduling system
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CARD BODY -->
+
+                            <div class="generator-card-body">
+
+
+                                <!-- INFORMATION -->
+
+                                <div class="generator-info">
+
+                                    <div class="generator-info-icon">
+                                        i
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            How the intelligent generator works
+                                        </strong>
+
+                                        <p>
+                                            The system analyzes course offerings,
+                                            lecturers, levels, venues, semesters
+                                            and available time slots. It then
+                                            assigns courses while checking
+                                            timetable constraints and preventing
+                                            scheduling conflicts.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- FEATURES -->
+
+                                <div class="generator-section-title">
+                                    Scheduling Features
+                                </div>
+
+
+                                <div class="generation-features">
+
+
+                                    <!-- FEATURE 1 -->
+
+                                    <div class="generation-feature">
+
+                                        <div class="feature-icon">
+                                            <i class="bi bi-shield-check"></i>
+                                        </div>
+
+                                        <div class="feature-text">
+
+                                            <strong>
+                                                Conflict Detection
+                                            </strong>
+
+                                            <span>
+                                                Prevent lecturer, venue and
+                                                level clashes.
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- FEATURE 2 -->
+
+                                    <div class="generation-feature">
+
+                                        <div class="feature-icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+
+                                        <div class="feature-text">
+
+                                            <strong>
+                                                Time Allocation
+                                            </strong>
+
+                                            <span>
+                                                Assign courses to suitable
+                                                available time slots.
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- FEATURE 3 -->
+
+                                    <div class="generation-feature">
+
+                                        <div class="feature-icon">
+                                            <i class="bi bi-building"></i>
+                                        </div>
+
+                                        <div class="feature-text">
+
+                                            <strong>
+                                                Venue Assignment
+                                            </strong>
+
+                                            <span>
+                                                Select appropriate venues for
+                                                scheduled classes.
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- FEATURE 4 -->
+
+                                    <div class="generation-feature">
+
+                                        <div class="feature-icon">
+                                            <i class="bi bi-people"></i>
+                                        </div>
+
+                                        <div class="feature-text">
+
+                                            <strong>
+                                                Lecturer Scheduling
+                                            </strong>
+
+                                            <span>
+                                                Prevent lecturers from being
+                                                scheduled simultaneously.
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- FEATURE 5 -->
+
+                                    <div class="generation-feature">
+
+                                        <div class="feature-icon">
+                                            <i class="bi bi-layers"></i>
+                                        </div>
+
+                                        <div class="feature-text">
+
+                                            <strong>
+                                                Level Protection
+                                            </strong>
+
+                                            <span>
+                                                Prevent a level from having
+                                                overlapping classes.
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- FEATURE 6 -->
+
+                                    <div class="generation-feature">
+
+                                        <div class="feature-icon">
+                                            <i class="bi bi-graph-up"></i>
+                                        </div>
+
+                                        <div class="feature-text">
+
+                                            <strong>
+                                                Intelligent Selection
+                                            </strong>
+
+                                            <span>
+                                                Prioritize difficult scheduling
+                                                combinations first.
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <!-- ALGORITHM -->
+
+                                <div class="algorithm-box">
+
+                                    <strong>
+                                        Intelligent Scheduling Approach
+                                    </strong>
+
+                                    <p>
+                                        The timetable generator uses a
+                                        constraint-based heuristic approach.
+                                        Hard constraints are checked first to
+                                        eliminate invalid assignments, while
+                                        scheduling preferences are considered
+                                        when selecting among valid alternatives.
+                                    </p>
+
+                                </div>
+
+
+                                <!-- GENERATION ACTION -->
+
+                                <div class="generate-action">
+
+                                    <div class="generate-action-text">
+
+                                        <strong>
+                                            Ready to generate?
+                                        </strong>
+
+                                        <span>
+                                            Existing timetable entries may be
+                                            replaced when a new timetable is
+                                            generated.
+                                        </span>
+
+                                    </div>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('timetable.generate') }}"
+                                        id="generateForm"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="generate-button"
+                                            id="generateButton"
+
+                                            {% if
+                                                resource_counts.courses == 0
+                                                or resource_counts.lecturers == 0
+                                                or resource_counts.venues == 0
+                                                or resource_counts.time_slots == 0
+                                                or resource_counts.levels == 0
+                                                or resource_counts.semesters == 0
+                                            %}
+                                                disabled
+                                            {% endif %}
+                                        >
+
+                                            <i
+                                                class="bi bi-magic"
+                                                id="generateIcon"
+                                            ></i>
+
+                                            <span id="generateButtonText">
+                                                Generate Timetable
+                                            </span>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             RIGHT INFORMATION
+                        ================================================== -->
+
+                        <div class="generator-side">
+
+
+                            <!-- AVAILABLE RESOURCES -->
+
+                            <div class="resource-card">
+
+                                <div class="resource-card-header">
+
+                                    <h5>
+                                        Available Resources
+                                    </h5>
+
+                                    <p>
+                                        Resources available for generation
+                                    </p>
+
+                                </div>
+
+
+                                <div class="resource-card-body">
+
+
+                                    <!-- COURSES -->
+
+                                    <div class="resource-item">
+
+                                        <span class="resource-name">
+
+                                            <i class="bi bi-book"></i>
+
+                                            Course Offerings
+
+                                        </span>
+
+                                        <span class="resource-count">
+                                            {{ resource_counts.courses }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- LECTURERS -->
+
+                                    <div class="resource-item">
+
+                                        <span class="resource-name">
+
+                                            <i class="bi bi-person-badge"></i>
+
+                                            Lecturers
+
+                                        </span>
+
+                                        <span class="resource-count">
+                                            {{ resource_counts.lecturers }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- VENUES -->
+
+                                    <div class="resource-item">
+
+                                        <span class="resource-name">
+
+                                            <i class="bi bi-building"></i>
+
+                                            Venues
+
+                                        </span>
+
+                                        <span class="resource-count">
+                                            {{ resource_counts.venues }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- TIME SLOTS -->
+
+                                    <div class="resource-item">
+
+                                        <span class="resource-name">
+
+                                            <i class="bi bi-clock"></i>
+
+                                            Time Slots
+
+                                        </span>
+
+                                        <span class="resource-count">
+                                            {{ resource_counts.time_slots }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- LEVELS -->
+
+                                    <div class="resource-item">
+
+                                        <span class="resource-name">
+
+                                            <i class="bi bi-layers"></i>
+
+                                            Levels
+
+                                        </span>
+
+                                        <span class="resource-count">
+                                            {{ resource_counts.levels }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- SEMESTERS -->
+
+                                    <div class="resource-item">
+
+                                        <span class="resource-name">
+
+                                            <i class="bi bi-calendar3"></i>
+
+                                            Semesters
+
+                                        </span>
+
+                                        <span class="resource-count">
+                                            {{ resource_counts.semesters }}
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- STATUS -->
+
+                                    {% if
+                                        resource_counts.courses == 0
+                                        or resource_counts.lecturers == 0
+                                        or resource_counts.venues == 0
+                                        or resource_counts.time_slots == 0
+                                        or resource_counts.levels == 0
+                                        or resource_counts.semesters == 0
+                                    %}
+
+                                        <div class="resource-warning">
+
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                                            <span>
+                                                Some required resources are
+                                                missing. Add the required course
+                                                offerings, lecturers, venues,
+                                                time slots, levels and semester
+                                                records before generating.
+                                            </span>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="resource-ready">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                All required resources are available.
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 CONSTRAINTS
+                            ================================================== -->
+
+                            <div class="resource-card">
+
+                                <div class="resource-card-header">
+
+                                    <h5>
+                                        Scheduling Constraints
+                                    </h5>
+
+                                    <p>
+                                        Rules enforced by the generator
+                                    </p>
+
+                                </div>
+
+
+                                <div class="resource-card-body">
+
+                                    <ul class="constraint-list">
+
+
+                                        <li>
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                A lecturer cannot teach two
+                                                classes at the same time.
+                                            </span>
+
+                                        </li>
+
+
+                                        <li>
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                A venue cannot host two classes
+                                                at the same time.
+                                            </span>
+
+                                        </li>
+
+
+                                        <li>
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                A level cannot have overlapping
+                                                classes.
+                                            </span>
+
+                                        </li>
+
+
+                                        <li>
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                Every course offering must have
+                                                a valid lecturer and level.
+                                            </span>
+
+                                        </li>
+
+
+                                        <li>
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                Courses must be assigned to
+                                                available time slots.
+                                            </span>
+
+                                        </li>
+
+
+                                        <li>
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span>
+                                                Venue assignments must satisfy
+                                                timetable requirements.
+                                            </span>
+
+                                        </li>
+
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="site-footer">
+
+            <strong>
+                ATBU Intelligent Timetable System
+            </strong>
+
+            &nbsp; | &nbsp;
+
+            Computer Science Department
+
+            &nbsp; | &nbsp;
+
+            Abubakar Tafawa Balewa University
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =====================================================
+           SIDEBAR ELEMENTS
+        ===================================================== */
+
+        const hamburgerBtn =
+            document.getElementById("hamburgerBtn");
+
+        const sidebar =
+            document.getElementById("adminSidebar");
+
+        const sidebarClose =
+            document.getElementById("sidebarClose");
+
+        const sidebarOverlay =
+            document.getElementById("sidebarOverlay");
+
+
+        /* =====================================================
+           OPEN SIDEBAR
+        ===================================================== */
+
+        function openSidebar() {
+
+            if (!sidebar) {
+                return;
+            }
+
+            sidebar.classList.add("sidebar-open");
+
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.add("active");
+            }
+
+            if (hamburgerBtn) {
+                hamburgerBtn.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+            }
+
+            document.body.style.overflow = "hidden";
+        }
+
+
+        /* =====================================================
+           CLOSE SIDEBAR
+        ===================================================== */
+
+        function closeSidebar() {
+
+            if (!sidebar) {
+                return;
+            }
+
+            sidebar.classList.remove("sidebar-open");
+
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.remove("active");
+            }
+
+            if (hamburgerBtn) {
+                hamburgerBtn.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            }
+
+            document.body.style.overflow = "";
+        }
+
+
+        /* =====================================================
+           HAMBURGER CLICK
+        ===================================================== */
+
+        if (hamburgerBtn) {
+
+            hamburgerBtn.addEventListener(
+                "click",
+                openSidebar
+            );
+
+        }
+
+
+        /* =====================================================
+           CLOSE BUTTON
+        ===================================================== */
+
+        if (sidebarClose) {
+
+            sidebarClose.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+
+
+        /* =====================================================
+           OVERLAY CLICK
+        ===================================================== */
+
+        if (sidebarOverlay) {
+
+            sidebarOverlay.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+
+
+        /* =====================================================
+           CLOSE WHEN NAVIGATION LINK IS CLICKED
+        ===================================================== */
+
+        if (sidebar) {
+
+            const sidebarLinks =
+                sidebar.querySelectorAll(
+                    ".sidebar-link"
+                );
+
+            sidebarLinks.forEach(
+                function (link) {
+
+                    link.addEventListener(
+                        "click",
+                        function () {
+
+                            if (
+                                window.innerWidth <= 768
+                            ) {
+                                closeSidebar();
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ESCAPE KEY
+        ===================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Escape") {
+                    closeSidebar();
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           RESET SIDEBAR WHEN SCREEN BECOMES DESKTOP
+        ===================================================== */
+
+        window.addEventListener(
+            "resize",
+            function () {
+
+                if (window.innerWidth > 768) {
+
+                    if (sidebar) {
+                        sidebar.classList.remove(
+                            "sidebar-open"
+                        );
+                    }
+
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove(
+                            "active"
+                        );
+                    }
+
+                    document.body.style.overflow = "";
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           GENERATE TIMETABLE BUTTON
+        ===================================================== */
+
+        const form =
+            document.getElementById("generateForm");
+
+        const button =
+            document.getElementById("generateButton");
+
+        const buttonText =
+            document.getElementById(
+                "generateButtonText"
+            );
+
+        const icon =
+            document.getElementById(
+                "generateIcon"
+            );
+
+
+        if (form && button) {
+
+            form.addEventListener(
+                "submit",
+                function () {
+
+                    /*
+                     * Prevent multiple submissions
+                     * while timetable is generating.
+                     */
+
+                    button.disabled = true;
+
+
+                    if (buttonText) {
+
+                        buttonText.textContent =
+                            "Generating...";
+
+                    }
+
+
+                    if (icon) {
+
+                        icon.className =
+                            "bi bi-arrow-repeat generate-spinner";
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

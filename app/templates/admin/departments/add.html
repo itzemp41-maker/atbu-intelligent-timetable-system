@@ -1,0 +1,202 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    Add Department - ATBU Timetable System
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2 class="page-title">
+            Add Department
+        </h2>
+
+        <p class="page-subtitle">
+            Add a new academic department to the timetable system.
+        </p>
+    </div>
+
+    <a
+        href="{{ url_for('departments.index') }}"
+        class="btn btn-outline-secondary"
+    >
+        ← Back to Departments
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     FORM CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <div class="content-card-header">
+
+        <div>
+            <h5>
+                Department Information
+            </h5>
+
+            <p>
+                Enter the details of the academic department.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="content-card-body">
+
+        <form
+            method="POST"
+            action="{{ url_for('departments.add') }}"
+        >
+
+            <!-- DEPARTMENT NAME -->
+
+            <div class="form-group">
+
+                <label
+                    for="name"
+                    class="form-label"
+                >
+                    Department Name
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control custom-input"
+                    id="name"
+                    name="name"
+                    placeholder="e.g. Computer Science"
+                    maxlength="150"
+                    required
+                    autofocus
+                >
+
+                <small class="form-help">
+                    Enter the full name of the academic department.
+                </small>
+
+            </div>
+
+
+            <!-- DEPARTMENT CODE -->
+
+            <div class="form-group">
+
+                <label
+                    for="code"
+                    class="form-label"
+                >
+                    Department Code
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control custom-input"
+                    id="code"
+                    name="code"
+                    placeholder="e.g. CSC"
+                    maxlength="20"
+                >
+
+                <small class="form-help">
+                    Optional. Enter a short code for the department.
+                </small>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('departments.index') }}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Department
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     INFORMATION CARD
+========================================================= -->
+
+<div class="info-box">
+
+    <div class="info-icon">
+        ℹ
+    </div>
+
+    <div>
+
+        <strong>
+            Important Information
+        </strong>
+
+        <p>
+            Department names must be unique.
+            Department codes, when provided, must also be unique.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

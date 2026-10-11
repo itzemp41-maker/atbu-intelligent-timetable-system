@@ -1,0 +1,221 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    Edit Department - ATBU Timetable System
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Edit Department
+        </h2>
+
+        <p class="page-subtitle">
+            Update department information in the timetable system.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('departments.index') }}"
+        class="btn btn-outline-secondary"
+    >
+        ← Back to Departments
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     EDIT FORM CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <div class="content-card-header">
+
+        <div>
+
+            <h5>
+                Department Information
+            </h5>
+
+            <p>
+                Modify the details of this academic department.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="content-card-body">
+
+        <form
+            method="POST"
+            action="{{ url_for(
+                'departments.edit',
+                department_id=department.id
+            ) }}"
+        >
+
+
+            <!-- DEPARTMENT NAME -->
+
+            <div class="form-group">
+
+                <label
+                    for="name"
+                    class="form-label"
+                >
+                    Department Name
+                    <span class="required">*</span>
+                </label>
+
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control custom-input"
+                    value="{{ department.name }}"
+                    maxlength="150"
+                    required
+                    autofocus
+                >
+
+
+                <small class="form-help">
+                    Enter the full name of the academic department.
+                </small>
+
+            </div>
+
+
+            <!-- DEPARTMENT CODE -->
+
+            <div class="form-group">
+
+                <label
+                    for="code"
+                    class="form-label"
+                >
+                    Department Code
+                </label>
+
+
+                <input
+                    type="text"
+                    id="code"
+                    name="code"
+                    class="form-control custom-input"
+                    value="{{ department.code or '' }}"
+                    maxlength="20"
+                >
+
+
+                <small class="form-help">
+                    Optional. Enter a short code for the department.
+                </small>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('departments.index') }}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Update Department
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     INFORMATION BOX
+========================================================= -->
+
+<div class="info-box">
+
+    <div class="info-icon">
+        ℹ
+    </div>
+
+
+    <div>
+
+        <strong>
+            Important Information
+        </strong>
+
+        <p>
+            Make sure the department name and code are correct
+            before saving your changes.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

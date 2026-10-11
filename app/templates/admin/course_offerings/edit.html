@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Course Offering | ATBU Intelligent Timetable System
+{% endblock %}
+
+{% block page_title %}
+Edit Course Offering
+{% endblock %}
+
+
+{% block styles %}
+
+<style>
+
+.offering-form-page {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.form-header {
+    margin-bottom: 25px;
+}
+
+.form-header h2 {
+    margin: 0;
+    color: #063b2a;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.form-header p {
+    margin: 7px 0 0;
+    color: #718096;
+    font-size: 14px;
+}
+
+.form-card {
+    background: #ffffff;
+    border: 1px solid #e4e8eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+}
+
+.form-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9eeeb;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.form-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eef8f3;
+    color: #063b2a;
+
+    font-size: 20px;
+}
+
+.form-card-header h5 {
+    margin: 0;
+    color: #063b2a;
+    font-size: 17px;
+}
+
+.form-card-header p {
+    margin: 4px 0 0;
+    color: #718096;
+    font-size: 12px;
+}
+
+.form-body {
+    padding: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+
+    color: #34423b;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-group label span {
+    color: #c0392b;
+}
+
+.form-control-custom {
+    width: 100%;
+
+    padding: 11px 13px;
+
+    border: 1px solid #dce3df;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #495057;
+
+    font-size: 13px;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition: .2s ease;
+}
+
+.form-control-custom:focus {
+    border-color: #198754;
+
+    box-shadow:
+        0 0 0 3px rgba(25,135,84,.10);
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.form-help {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #87928c;
+
+    font-size: 11px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #edf0ee;
+}
+
+.cancel-btn,
+.save-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 11px 17px;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #ffffff;
+    color: #52645b;
+    border: 1px solid #dce3df;
+}
+
+.cancel-btn:hover {
+    background: #f5f7f6;
+    color: #34423b;
+}
+
+.save-btn {
+    border: none;
+    background: #063b2a;
+    color: #ffffff;
+}
+
+.save-btn:hover {
+    background: #0b513b;
+}
+
+@media (max-width: 650px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-body {
+        padding: 20px;
+    }
+
+    .form-card-header {
+        padding: 17px;
+    }
+
+    .form-header h2 {
+        font-size: 23px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .cancel-btn,
+    .save-btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="offering-form-page">
+
+    <div class="form-header">
+
+        <h2>
+            Edit Course Offering
+        </h2>
+
+        <p>
+            Update the lecturer, level or semester assignment.
+        </p>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+
+            <div class="form-icon">
+
+                <i class="bi bi-pencil-square"></i>
+
+            </div>
+
+            <div>
+
+                <h5>
+                    Course Offering Information
+                </h5>
+
+                <p>
+                    Modify the selected course offering.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-body">
+
+            <form method="POST">
+
+
+                <div class="form-grid">
+
+
+                    <!-- COURSE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Course <span>*</span>
+                        </label>
+
+                        <select
+                            name="course_id"
+                            class="form-control-custom"
+                            required>
+
+                            {% for course in courses %}
+
+                                <option
+                                    value="{{ course.id }}"
+                                    {% if course.id == offering.course_id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ course.code }}
+                                    —
+                                    {{ course.title }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LECTURER -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Lecturer <span>*</span>
+                        </label>
+
+                        <select
+                            name="lecturer_id"
+                            class="form-control-custom"
+                            required>
+
+                            {% for lecturer in lecturers %}
+
+                                <option
+                                    value="{{ lecturer.id }}"
+                                    {% if lecturer.id == offering.lecturer_id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ lecturer.name }}
+
+                                    {% if lecturer.staff_id %}
+                                        ({{ lecturer.staff_id }})
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LEVEL -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Level <span>*</span>
+                        </label>
+
+                        <select
+                            name="level_id"
+                            class="form-control-custom"
+                            required>
+
+                            {% for level in levels %}
+
+                                <option
+                                    value="{{ level.id }}"
+                                    {% if level.id == offering.level_id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ level.name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- SEMESTER -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Semester <span>*</span>
+                        </label>
+
+                        <select
+                            name="semester_id"
+                            class="form-control-custom"
+                            required>
+
+                            {% for semester in semesters %}
+
+                                <option
+                                    value="{{ semester.id }}"
+                                    {% if semester.id == offering.semester_id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ semester.name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a
+                        href="{{ url_for('course_offerings.index') }}"
+                        class="cancel-btn">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn">
+
+                        <i class="bi bi-check-lg"></i>
+
+                        Update Course Offering
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Levels - ATBU Timetable System</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Global ATBU CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           LEVELS PAGE
+        ===================================================== */
+
+        .levels-page {
+            width: 100%;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #123b2a;
+        }
+
+        .page-subtitle {
+            margin: 6px 0 0;
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+
+        /* =====================================================
+           ADD LEVEL BUTTON
+        ===================================================== */
+
+        .add-level-btn {
+            background: #123b2a;
+            border: 1px solid #123b2a;
+            color: #ffffff;
+            border-radius: 7px;
+            padding: 10px 17px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .add-level-btn:hover {
+            background: #0b271d;
+            border-color: #0b271d;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           LEVEL CONTENT CARD
+        ===================================================== */
+
+        .levels-card {
+            background: #ffffff;
+            border: 1px solid #e6ebe8;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .levels-card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid #e9ecef;
+            background: #ffffff;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .levels-card-header h5 {
+            margin: 0;
+            color: #123b2a;
+            font-weight: 700;
+        }
+
+        .levels-card-header p {
+            margin: 5px 0 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+
+        /* =====================================================
+           LEVEL COUNT
+        ===================================================== */
+
+        .level-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            background: #eef8f3;
+            color: #198754;
+
+            font-size: 0.82rem;
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           TABLE WRAPPER
+        ===================================================== */
+
+        .levels-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+
+        /* =====================================================
+           LEVEL TABLE
+        ===================================================== */
+
+        .levels-table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        .levels-table thead th {
+            background: #123b2a;
+            color: #ffffff;
+
+            border: none;
+
+            padding: 14px 18px;
+
+            font-size: 0.82rem;
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+        .levels-table tbody td {
+            padding: 15px 18px;
+
+            border-bottom: 1px solid #edf0ee;
+
+            color: #34423b;
+
+            font-size: 14px;
+
+            vertical-align: middle;
+        }
+
+        .levels-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .levels-table tbody tr:hover {
+            background: #f7faf8;
+        }
+
+        .levels-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =====================================================
+           TABLE NUMBER
+        ===================================================== */
+
+        .level-number {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 30px;
+            height: 30px;
+
+            border-radius: 50%;
+
+            background: #eef8f3;
+
+            color: #198754;
+
+            font-size: 0.82rem;
+
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           LEVEL NAME
+        ===================================================== */
+
+        .level-name {
+            color: #123b2a;
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           PROGRAMME BADGE
+        ===================================================== */
+
+        .programme-badge {
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 6px;
+
+            background: #eef1f3;
+
+            color: #495057;
+
+            font-size: 0.82rem;
+
+            font-weight: 500;
+        }
+
+
+        /* =====================================================
+           DEPARTMENT BADGE
+        ===================================================== */
+
+        .department-badge {
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 6px;
+
+            background: #e8f4ee;
+
+            color: #123b2a;
+
+            font-size: 0.82rem;
+
+            font-weight: 500;
+        }
+
+
+        /* =====================================================
+           NOT ASSIGNED
+        ===================================================== */
+
+        .not-assigned {
+            color: #8a8f93;
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .level-actions {
+            display: flex;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            gap: 6px;
+
+            white-space: nowrap;
+        }
+
+        .level-actions .btn {
+            border-radius: 6px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            padding: 6px 11px;
+        }
+
+        .level-actions .btn-outline-primary {
+            color: #123b2a;
+            border-color: #123b2a;
+        }
+
+        .level-actions .btn-outline-primary:hover {
+            background: #123b2a;
+            border-color: #123b2a;
+            color: #ffffff;
+        }
+
+        .level-actions .btn-outline-danger {
+            color: #b42318;
+            border-color: #dc3545;
+        }
+
+        .level-actions .btn-outline-danger:hover {
+            background: #b42318;
+            border-color: #b42318;
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .levels-empty-state {
+            text-align: center;
+
+            padding: 70px 20px;
+        }
+
+        .levels-empty-icon {
+            width: 65px;
+            height: 65px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #eef8f3;
+
+            font-size: 28px;
+        }
+
+        .levels-empty-state h5 {
+            margin-bottom: 7px;
+
+            color: #123b2a;
+
+            font-weight: 700;
+        }
+
+        .levels-empty-state p {
+            margin-bottom: 20px;
+
+            color: #6c757d;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE DESIGN
+        ===================================================== */
+
+        @media (max-width: 991px) {
+
+            .page-header {
+                align-items: flex-start;
+            }
+
+        }
+
+
+        @media (max-width: 768px) {
+
+            .page-header {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .add-level-btn {
+                width: 100%;
+
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .levels-card {
+                border-radius: 8px;
+            }
+
+            .levels-card-header {
+                padding: 16px;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+            .levels-table thead th,
+            .levels-table tbody td {
+                padding: 12px;
+            }
+
+            .level-actions {
+                justify-content: flex-start;
+            }
+
+        }
+
+
+        @media (max-width: 576px) {
+
+            .page-title {
+                font-size: 1.35rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .levels-card-header {
+                padding: 16px;
+            }
+
+            .levels-table {
+                min-width: 750px;
+            }
+
+            .levels-empty-state {
+                padding: 50px 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     ADMIN LAYOUT
+===================================================== -->
+
+<div class="admin-layout">
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- Sidebar Header -->
+
+        <div class="sidebar-header">
+
+            <h4>
+                ATBU Timetable
+            </h4>
+
+            <span>
+                Administration Panel
+            </span>
+
+        </div>
+
+
+        <!-- Sidebar Navigation -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- Dashboard -->
+
+            <a
+                href="{{ url_for('main.admin_dashboard') }}"
+                class="nav-link"
+            >
+                📊 Dashboard
+            </a>
+
+
+            <!-- Departments -->
+
+            <a
+                href="{{ url_for('departments.index') }}"
+                class="nav-link"
+            >
+                🏢 Departments
+            </a>
+
+
+            <!-- Programmes -->
+
+            <a
+                href="{{ url_for('programmes.index') }}"
+                class="nav-link"
+            >
+                🎓 Programmes
+            </a>
+
+
+            <!-- Levels -->
+
+            <a
+                href="{{ url_for('levels.index') }}"
+                class="nav-link active"
+            >
+                📚 Levels
+            </a>
+
+
+            <!-- Courses -->
+
+            <a
+                href="{{ url_for('courses.index') }}"
+                class="nav-link"
+            >
+                📖 Courses
+            </a>
+
+
+            <!-- Lecturers -->
+
+            <a
+                href="{{ url_for('lecturers.index') }}"
+                class="nav-link"
+            >
+                👨‍🏫 Lecturers
+            </a>
+
+
+            <!-- Venues -->
+
+            <a
+                href="{{ url_for('venues.index') }}"
+                class="nav-link"
+            >
+                🏫 Venues
+            </a>
+
+
+            <!-- Time Slots -->
+
+            <a
+                href="{{ url_for('time_slots.index') }}"
+                class="nav-link"
+            >
+                🕒 Time Slots
+            </a>
+
+
+            <!-- Generate Timetable -->
+
+            <a
+                href="{{ url_for('timetable.generate') }}"
+                class="nav-link"
+            >
+                ⚙️ Generate Timetable
+            </a>
+
+
+        </nav>
+
+
+        <!-- Sidebar Bottom -->
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{{ url_for('auth.logout') }}"
+                class="logout-link"
+            >
+                Logout
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN WRAPPER
+    ================================================== -->
+
+    <div class="main-wrapper">
+
+
+        <!-- =================================================
+             TOP NAVBAR
+        ================================================== -->
+
+        <header class="top-navbar">
+
+
+            <div>
+
+                <strong>
+                    ATBU Timetable System
+                </strong>
+
+            </div>
+
+
+            <div class="user-area">
+
+                Welcome,
+
+                <strong>
+                    {{ current_user.username }}
+                </strong>
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content levels-page">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1 class="page-title">
+                        Levels
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Manage academic levels for each programme.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('levels.add') }}"
+                    class="add-level-btn"
+                >
+                    + Add Level
+                </a>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FLASH MESSAGES
+            ================================================== -->
+
+            {% with messages = get_flashed_messages(
+                with_categories=true
+            ) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div
+                            class="alert alert-{{ category }} alert-dismissible fade show"
+                            role="alert"
+                        >
+
+                            {{ message }}
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                            ></button>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+
+            <!-- =================================================
+                 LEVELS CARD
+            ================================================== -->
+
+            <div class="levels-card">
+
+
+                <!-- Card Header -->
+
+                <div class="levels-card-header">
+
+                    <div>
+
+                        <h5>
+                            Academic Levels
+                        </h5>
+
+                        <p>
+                            View and manage levels assigned to programmes.
+                        </p>
+
+                    </div>
+
+
+                    {% if levels %}
+
+                        <span class="level-count">
+
+                            {{ levels|length }}
+
+                            Level{% if levels|length != 1 %}s{% endif %}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- Card Body -->
+
+                {% if levels %}
+
+                    <div class="levels-table-wrapper">
+
+                        <table class="levels-table">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Level
+                                    </th>
+
+                                    <th>
+                                        Programme
+                                    </th>
+
+                                    <th>
+                                        Department
+                                    </th>
+
+                                    <th class="text-end">
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for level in levels %}
+
+                                    <tr>
+
+
+                                        <!-- Number -->
+
+                                        <td>
+
+                                            <span class="level-number">
+                                                {{ loop.index }}
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Level -->
+
+                                        <td>
+
+                                            <span class="level-name">
+                                                {{ level.name }}
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Programme -->
+
+                                        <td>
+
+                                            {% if level.programme %}
+
+                                                <span class="programme-badge">
+
+                                                    {{ level.programme.name }}
+
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="not-assigned">
+                                                    Not assigned
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- Department -->
+
+                                        <td>
+
+                                            {% if level.programme and level.programme.department %}
+
+                                                <span class="department-badge">
+
+                                                    {{ level.programme.department.name }}
+
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="not-assigned">
+                                                    Not assigned
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- Actions -->
+
+                                        <td>
+
+                                            <div class="level-actions">
+
+
+                                                <a
+                                                    href="{{ url_for(
+                                                        'levels.edit',
+                                                        level_id=level.id
+                                                    ) }}"
+                                                    class="btn btn-outline-primary"
+                                                >
+                                                    Edit
+                                                </a>
+
+
+                                                <form
+                                                    method="POST"
+                                                    action="{{ url_for(
+                                                        'levels.delete',
+                                                        level_id=level.id
+                                                    ) }}"
+                                                    class="d-inline"
+                                                    onsubmit="return confirm('Are you sure you want to delete this level?');"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-outline-danger"
+                                                    >
+                                                        Delete
+                                                    </button>
+
+                                                </form>
+
+
+                                            </div>
+
+                                        </td>
+
+
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+
+                        </table>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- EMPTY STATE -->
+
+                    <div class="levels-empty-state">
+
+
+                        <div class="levels-empty-icon">
+                            📚
+                        </div>
+
+
+                        <h5>
+                            No levels found
+                        </h5>
+
+
+                        <p>
+                            Start by adding the first academic level.
+                        </p>
+
+
+                        <a
+                            href="{{ url_for('levels.add') }}"
+                            class="btn btn-primary"
+                        >
+                            + Add Level
+                        </a>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </main>
+
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="admin-footer">
+
+
+            <div class="footer-content">
+
+
+                <div class="footer-brand">
+
+                    <h5>
+                        ATBU Timetable System
+                    </h5>
+
+                    <p>
+                        Intelligent Automated Timetable Generation System
+                        designed to improve academic scheduling and timetable
+                        management at Abubakar Tafawa Balewa University.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-links">
+
+                    <h6>
+                        Administration
+                    </h6>
+
+                    <a href="{{ url_for('main.admin_dashboard') }}">
+                        Dashboard
+                    </a>
+
+                    <a href="{{ url_for('departments.index') }}">
+                        Departments
+                    </a>
+
+                    <a href="{{ url_for('programmes.index') }}">
+                        Programmes
+                    </a>
+
+                    <a href="{{ url_for('levels.index') }}">
+                        Levels
+                    </a>
+
+                </div>
+
+
+                <div class="footer-info">
+
+                    <h6>
+                        University
+                    </h6>
+
+                    <p>
+                        Abubakar Tafawa Balewa University
+                    </p>
+
+                    <p>
+                        Bauchi, Nigeria
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <p>
+                    © 2026 ATBU Timetable System. All Rights Reserved.
+                </p>
+
+                <p>
+                    Intelligent Automated Timetable Generation System
+                </p>
+
+            </div>
+
+
+        </footer>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- Bootstrap JavaScript -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+</body>
+
+</html>

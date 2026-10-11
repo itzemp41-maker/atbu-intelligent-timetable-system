@@ -1,0 +1,261 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Semesters - ATBU Timetable
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Semesters
+        </h2>
+
+        <p class="page-subtitle">
+            Manage academic semesters.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('semesters.add') }}"
+        class="btn btn-primary"
+    >
+        + Add Semester
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     SEMESTER CONTENT CARD
+========================================================= -->
+
+<div class="content-card">
+
+
+    <!-- CARD HEADER -->
+
+    <div class="content-card-header">
+
+        <div>
+
+            <h5>
+                Semester List
+            </h5>
+
+            <p>
+                View and manage all academic semesters.
+            </p>
+
+        </div>
+
+
+        {% if semesters %}
+
+            <span class="data-count">
+
+                {{ semesters|length }}
+                Semester{% if semesters|length != 1 %}s{% endif %}
+
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- CARD BODY -->
+
+    <div class="content-card-body">
+
+        {% if semesters %}
+
+            <div class="table-wrapper">
+
+                <table class="custom-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Semester
+                            </th>
+
+                            <th class="actions-column">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for semester in semesters %}
+
+                            <tr>
+
+
+                                <!-- NUMBER -->
+
+                                <td>
+
+                                    <span class="table-number">
+                                        {{ loop.index }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- SEMESTER NAME -->
+
+                                <td>
+
+                                    <span class="item-name">
+                                        {{ semester.name }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td class="actions-column">
+
+                                    <div class="table-actions">
+
+
+                                        <!-- EDIT -->
+
+                                        <a
+                                            href="{{ url_for(
+                                                'semesters.edit',
+                                                semester_id=semester.id
+                                            ) }}"
+                                            class="btn btn-sm btn-outline-primary"
+                                        >
+                                            Edit
+                                        </a>
+
+
+                                        <!-- DELETE -->
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'semesters.delete',
+                                                semester_id=semester.id
+                                            ) }}"
+                                            class="delete-form"
+                                            onsubmit="return confirm(
+                                                'Are you sure you want to delete this semester?'
+                                            );"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    📅
+                </div>
+
+                <h5>
+                    No Semesters Found
+                </h5>
+
+                <p>
+                    No academic semesters have been created yet.
+                </p>
+
+                <a
+                    href="{{ url_for('semesters.add') }}"
+                    class="btn btn-primary"
+                >
+                    + Add First Semester
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Edit Course
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h4 class="mb-0">
+                    Edit Course
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <form method="POST">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Course Code
+                        </label>
+
+                        <input
+                            type="text"
+                            name="code"
+                            class="form-control"
+                            value="{{ course.code }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Course Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            value="{{ course.title }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Course Units
+                        </label>
+
+                        <input
+                            type="number"
+                            name="units"
+                            class="form-control"
+                            min="1"
+                            max="10"
+                            value="{{ course.units }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Course Type
+                        </label>
+
+                        <select
+                            name="course_type"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="Theory"
+                                {% if course.course_type == "Theory" %}
+                                selected
+                                {% endif %}
+                            >
+                                Theory
+                            </option>
+
+                            <option
+                                value="Practical"
+                                {% if course.course_type == "Practical" %}
+                                selected
+                                {% endif %}
+                            >
+                                Practical
+                            </option>
+
+                            <option
+                                value="Laboratory"
+                                {% if course.course_type == "Laboratory" %}
+                                selected
+                                {% endif %}
+                            >
+                                Laboratory
+                            </option>
+
+                            <option
+                                value="Seminar"
+                                {% if course.course_type == "Seminar" %}
+                                selected
+                                {% endif %}
+                            >
+                                Seminar
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Level
+                        </label>
+
+                        <select
+                            name="level_id"
+                            class="form-select"
+                            required
+                        >
+
+                            {% for level in levels %}
+
+                            <option
+                                value="{{ level.id }}"
+                                {% if level.id == course.level_id %}
+                                selected
+                                {% endif %}
+                            >
+
+                                {{ level.name }}
+                                -
+                                {{ level.programme.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="d-flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Update Course
+                        </button>
+
+                        <a
+                            href="{{ url_for('courses.index') }}"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

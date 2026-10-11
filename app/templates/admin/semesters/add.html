@@ -1,0 +1,151 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Add Semester - ATBU Timetable
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Add Semester
+        </h2>
+
+        <p class="page-subtitle">
+            Create a new academic semester.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     FORM CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <!-- CARD HEADER -->
+
+    <div class="content-card-header">
+
+        <div>
+
+            <h5>
+                Semester Information
+            </h5>
+
+            <p>
+                Enter the details for the new academic semester.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CARD BODY -->
+
+    <div class="content-card-body">
+
+        <form
+            method="POST"
+            action="{{ url_for('semesters.add') }}"
+        >
+
+
+            <!-- SEMESTER NAME -->
+
+            <div class="mb-4">
+
+                <label
+                    for="name"
+                    class="form-label"
+                >
+                    Semester Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    class="form-control"
+                    placeholder="e.g. First Semester"
+                    required
+                >
+
+                <div class="form-text">
+                    Enter the name of the academic semester.
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="d-flex gap-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Semester
+                </button>
+
+                <a
+                    href="{{ url_for('semesters.index') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

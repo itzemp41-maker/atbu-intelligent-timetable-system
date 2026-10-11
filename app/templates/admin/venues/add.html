@@ -1,0 +1,971 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Add Venue - ATBU Timetable
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Add Venue
+        </h2>
+
+        <p class="page-subtitle">
+            Register a classroom, lecture theatre, laboratory,
+            hall or other teaching venue.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('venues.index') }}"
+        class="btn btn-outline-secondary"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to Venues
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {% if category == "success" %}
+                    <i class="bi bi-check-circle-fill me-2"></i>
+
+                {% elif category == "danger" %}
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                {% elif category == "warning" %}
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+
+                {% else %}
+                    <i class="bi bi-info-circle-fill me-2"></i>
+
+                {% endif %}
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+
+<!-- =========================================================
+     FORM CARD
+========================================================= -->
+
+<div class="content-card venue-form-card">
+
+
+    <!-- =====================================================
+         CARD HEADER
+    ====================================================== -->
+
+    <div class="content-card-header">
+
+        <div class="venue-card-heading">
+
+            <div class="venue-icon">
+
+                <i class="bi bi-building-add"></i>
+
+            </div>
+
+
+            <div>
+
+                <h5>
+                    Venue Information
+                </h5>
+
+                <p>
+                    Enter the details of the new teaching venue.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CARD BODY
+    ====================================================== -->
+
+    <div class="content-card-body">
+
+
+        <!-- =================================================
+             INFORMATION MESSAGE
+        ================================================== -->
+
+        <div class="venue-info">
+
+            <i class="bi bi-info-circle-fill"></i>
+
+            <div>
+
+                <strong>
+                    Venue details
+                </strong>
+
+                <p>
+                    Capacity and venue type are used by the
+                    intelligent timetable generator when
+                    assigning courses to suitable venues.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
+        <form
+            method="POST"
+            action="{{ url_for('venues.add') }}"
+            id="venueForm"
+        >
+
+
+            <!-- =================================================
+                 SECTION
+            ================================================== -->
+
+            <div class="form-section-title">
+
+                <i class="bi bi-building"></i>
+
+                Basic Venue Information
+
+            </div>
+
+
+            <div class="row g-4">
+
+
+                <!-- =================================================
+                     VENUE NAME
+                ================================================== -->
+
+                <div class="col-md-6">
+
+                    <div class="form-group">
+
+                        <label
+                            for="name"
+                            class="form-label"
+                        >
+
+                            Venue Name
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="form-control"
+                            placeholder="e.g. LT 1"
+                            maxlength="100"
+                            autocomplete="off"
+                            required
+                        >
+
+
+                        <small class="form-help">
+                            Enter the official name or code
+                            of the venue.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CAPACITY
+                ================================================== -->
+
+                <div class="col-md-6">
+
+                    <div class="form-group">
+
+                        <label
+                            for="capacity"
+                            class="form-label"
+                        >
+
+                            Capacity
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="capacity"
+                            name="capacity"
+                            class="form-control"
+                            placeholder="e.g. 300"
+                            min="1"
+                            step="1"
+                            required
+                        >
+
+
+                        <small class="form-help">
+                            Maximum number of students
+                            the venue can accommodate.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     VENUE TYPE
+                ================================================== -->
+
+                <div class="col-12">
+
+                    <div class="form-group">
+
+                        <label
+                            for="venue_type"
+                            class="form-label"
+                        >
+
+                            Venue Type
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select
+                            id="venue_type"
+                            name="venue_type"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select venue type
+                            </option>
+
+                            <option value="Classroom">
+                                Classroom
+                            </option>
+
+                            <option value="Lecture Theatre">
+                                Lecture Theatre
+                            </option>
+
+                            <option value="Laboratory">
+                                Laboratory
+                            </option>
+
+                            <option value="Computer Laboratory">
+                                Computer Laboratory
+                            </option>
+
+                            <option value="Hall">
+                                Hall
+                            </option>
+
+                            <option value="Seminar Room">
+                                Seminar Room
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+
+                        <small class="form-help">
+                            Select the category that best
+                            describes this venue.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('venues.index') }}"
+                    class="btn btn-outline-secondary"
+                >
+
+                    <i class="bi bi-x-lg"></i>
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveVenueButton"
+                >
+
+                    <i
+                        class="bi bi-check-lg"
+                        id="saveVenueIcon"
+                    ></i>
+
+                    <span id="saveVenueText">
+                        Save Venue
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAGE-SPECIFIC STYLES
+========================================================= -->
+
+<style>
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.venue-form-card {
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+}
+
+
+/* =========================================================
+   CARD HEADING
+========================================================= */
+
+.venue-card-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.venue-icon {
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eef7f0;
+
+    color: #0b5d1e;
+
+    border-radius: 8px;
+
+    font-size: 18px;
+
+}
+
+
+.venue-card-heading h5 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: #111827;
+
+}
+
+
+.venue-card-heading p {
+
+    margin: 3px 0 0;
+
+    font-size: 12px;
+
+    color: #6b7280;
+
+}
+
+
+
+/* =========================================================
+   INFORMATION BOX
+========================================================= */
+
+.venue-info {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+
+    padding: 13px 15px;
+
+    background: #f1f8f3;
+
+    border: 1px solid #d5e8d9;
+
+    border-left: 3px solid #0b5d1e;
+
+    border-radius: 7px;
+
+    color: #315b3b;
+
+}
+
+
+.venue-info > i {
+
+    color: #0b5d1e;
+
+    font-size: 15px;
+
+    margin-top: 2px;
+
+    flex-shrink: 0;
+
+}
+
+
+.venue-info strong {
+
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #285b35;
+
+    font-size: 12px;
+
+}
+
+
+.venue-info p {
+
+    margin: 0;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+}
+
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.form-section-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+
+    color: #0b5d1e;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+
+.form-section-title::after {
+
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #e5e7eb;
+
+}
+
+
+.form-section-title i {
+
+    font-size: 14px;
+
+}
+
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.form-label {
+
+    margin-bottom: 0;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+.required {
+
+    color: #dc3545;
+
+}
+
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.venue-form-card .form-control,
+.venue-form-card .form-select {
+
+    height: 43px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #111827;
+
+    font-size: 13px;
+
+    box-shadow: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.venue-form-card textarea.form-control {
+
+    height: auto;
+
+    padding-top: 10px;
+
+    padding-bottom: 10px;
+
+}
+
+
+.venue-form-card .form-control:hover,
+.venue-form-card .form-select:hover {
+
+    border-color: #9ca3af;
+
+}
+
+
+.venue-form-card .form-control:focus,
+.venue-form-card .form-select:focus {
+
+    border-color: #0b5d1e;
+
+    box-shadow:
+        0 0 0 3px rgba(11, 93, 30, 0.08);
+
+}
+
+
+.venue-form-card .form-control::placeholder {
+
+    color: #9ca3af;
+
+}
+
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.form-help {
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.form-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    margin-top: 28px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #edf0f2;
+
+}
+
+
+
+/* =========================================================
+   BUTTON ALIGNMENT
+========================================================= */
+
+.form-actions .btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 39px;
+
+}
+
+
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+#saveVenueButton:disabled {
+
+    opacity: 0.7;
+
+    cursor: not-allowed;
+
+}
+
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.venue-loading {
+
+    animation:
+        venueSpin 1s linear infinite;
+
+}
+
+
+@keyframes venueSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .venue-form-card {
+
+        max-width: 100%;
+
+    }
+
+
+    .venue-card-heading h5 {
+
+        font-size: 15px;
+
+    }
+
+
+    .form-actions {
+
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+
+    }
+
+
+    .form-actions .btn {
+
+        width: 100%;
+
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .venue-icon {
+
+        width: 39px;
+        height: 39px;
+
+        font-size: 17px;
+
+    }
+
+
+    .venue-card-heading p {
+
+        font-size: 11px;
+
+    }
+
+
+    .venue-form-card .content-card-body {
+
+        padding: 16px;
+
+    }
+
+
+    .venue-info {
+
+        padding: 11px 12px;
+
+    }
+
+
+    .venue-form-card .form-control,
+    .venue-form-card .form-select {
+
+        height: 42px;
+
+        font-size: 12px;
+
+    }
+
+
+    .form-label {
+
+        font-size: 12px;
+
+    }
+
+
+    .form-help {
+
+        font-size: 10px;
+
+    }
+
+}
+
+</style>
+
+
+
+<!-- =========================================================
+     FORM JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form =
+        document.getElementById("venueForm");
+
+    const button =
+        document.getElementById("saveVenueButton");
+
+    const icon =
+        document.getElementById("saveVenueIcon");
+
+    const text =
+        document.getElementById("saveVenueText");
+
+
+    if (!form || !button) {
+        return;
+    }
+
+
+    form.addEventListener("submit", function (event) {
+
+        /*
+         * Allow HTML5 validation to run first.
+         */
+
+        if (!form.checkValidity()) {
+
+            return;
+
+        }
+
+
+        /*
+         * Prevent accidental
+         * double submission.
+         */
+
+        button.disabled = true;
+
+
+        if (icon) {
+
+            icon.className =
+                "bi bi-arrow-repeat venue-loading";
+
+        }
+
+
+        if (text) {
+
+            text.textContent =
+                "Saving...";
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Programme - ATBU Timetable System</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* =========================================================
+   ATBU TIMETABLE SYSTEM
+   GLOBAL ADMIN STYLESHEET
+========================================================= */
+
+:root {
+    --atbu-green: #075c3a;
+    --atbu-dark-green: #043d27;
+    --atbu-light-green: #e8f4ee;
+    --atbu-accent: #0b7a4b;
+    --atbu-gold: #d6a72c;
+
+    --background: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+
+    --sidebar-width: 255px;
+}
+
+
+/* =========================================================
+   GENERAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text-dark);
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   ADMIN LAYOUT
+========================================================= */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    width: var(--sidebar-width);
+
+    min-height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--atbu-dark-green),
+            var(--atbu-green)
+        );
+
+    color: white;
+
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.08);
+
+    z-index: 1000;
+}
+
+
+/* Sidebar Header */
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 22px 18px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-logo {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: white;
+    color: var(--atbu-green);
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.sidebar-header h5 {
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sidebar-header small {
+    color: rgba(255, 255, 255, 0.65);
+
+    font-size: 11px;
+}
+
+
+/* Sidebar Navigation */
+
+.sidebar-nav {
+    padding: 15px 12px;
+
+    flex: 1;
+
+    overflow-y: auto;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    padding: 11px 13px;
+
+    margin-bottom: 5px;
+
+    border-radius: 8px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.10);
+
+    color: white;
+
+    transform: translateX(2px);
+}
+
+.sidebar-link.active {
+    background: white;
+
+    color: var(--atbu-green);
+
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+.menu-icon {
+    width: 22px;
+
+    text-align: center;
+
+    font-size: 16px;
+}
+
+
+/* Sidebar Bottom */
+
+.sidebar-bottom {
+    padding: 12px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+}
+
+.logout-link {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   MAIN AREA
+========================================================= */
+
+.main-area {
+    width: calc(100% - var(--sidebar-width));
+
+    margin-left: var(--sidebar-width);
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   TOP NAVBAR
+========================================================= */
+
+.top-navbar {
+    min-height: 72px;
+
+    padding: 12px 28px;
+
+    background: white;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 900;
+
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.top-navbar h6 {
+    color: var(--atbu-green);
+
+    font-weight: 700;
+}
+
+.top-navbar small {
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+/* User */
+
+.user-area {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    font-size: 14px;
+}
+
+.welcome-text {
+    color: var(--text-muted);
+}
+
+
+/* Logout */
+
+.logout-btn {
+    padding: 7px 14px;
+
+    border:
+        1px solid
+        var(--atbu-green);
+
+    border-radius: 7px;
+
+    color: var(--atbu-green);
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    background: var(--atbu-green);
+
+    color: white;
+}
+
+
+/* =========================================================
+   PAGE CONTENT
+========================================================= */
+
+.page-content {
+    flex: 1;
+
+    padding: 30px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+.page-label {
+    display: inline-block;
+
+    margin-bottom: 5px;
+
+    color: var(--atbu-green);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.page-header h1 {
+    margin: 0 0 5px;
+
+    font-size: 28px;
+
+    font-weight: 700;
+}
+
+.page-header p {
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CONTENT CARD
+========================================================= */
+
+.content-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.content-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 20px 24px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+.content-card-header h5 {
+    margin: 0 0 4px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+.content-card-header p {
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+.card-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: var(--atbu-light-green);
+
+    color: var(--atbu-green);
+
+    font-size: 20px;
+
+    font-weight: 700;
+}
+
+.content-card-body {
+    padding: 25px;
+}
+
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-group-custom {
+    margin-bottom: 24px;
+}
+
+.form-group-custom label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.required {
+    color: #dc3545;
+}
+
+.form-group-custom small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+.custom-input {
+    min-height: 46px;
+
+    border:
+        1px solid
+        #d9dee3;
+
+    border-radius: 8px;
+
+    padding: 10px 13px;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.custom-input:focus {
+    border-color: var(--atbu-green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(7, 92, 58, 0.10);
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn-atbu {
+    background: var(--atbu-green);
+
+    border-color: var(--atbu-green);
+
+    color: white;
+
+    padding: 9px 18px;
+
+    border-radius: 7px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.btn-atbu:hover {
+    background: var(--atbu-dark-green);
+
+    border-color: var(--atbu-dark-green);
+
+    color: white;
+}
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 10px;
+}
+
+
+/* =========================================================
+   INFORMATION BOX
+========================================================= */
+
+.info-box {
+    display: flex;
+
+    gap: 13px;
+
+    margin-top: 20px;
+
+    padding: 16px 18px;
+
+    background: var(--atbu-light-green);
+
+    border:
+        1px solid
+        #cde5d8;
+
+    border-radius: 9px;
+
+    color: #315d48;
+}
+
+.info-icon {
+    flex-shrink: 0;
+
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--atbu-green);
+
+    color: white;
+
+    font-weight: 700;
+}
+
+.info-box strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--atbu-dark-green);
+}
+
+.info-box p {
+    margin: 0;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.alert {
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.site-footer {
+    background: var(--atbu-dark-green);
+
+    color: white;
+
+    padding: 22px 30px;
+
+    margin-top: auto;
+}
+
+.footer-content {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.site-footer strong {
+    font-size: 14px;
+}
+
+.site-footer p {
+    margin: 4px 0 0;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    font-size: 12px;
+}
+
+.footer-right {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 4px;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+    :root {
+        --sidebar-width: 220px;
+    }
+
+    .page-content {
+        padding: 24px;
+    }
+
+    .top-navbar {
+        padding: 12px 20px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .admin-layout {
+        display: block;
+    }
+
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+
+        min-height: auto;
+    }
+
+
+    .sidebar-header {
+        padding: 15px;
+    }
+
+
+    .sidebar-nav {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 4px;
+
+        padding: 10px;
+    }
+
+
+    .sidebar-link {
+        margin: 0;
+
+        padding: 10px;
+
+        font-size: 13px;
+    }
+
+
+    .sidebar-bottom {
+        padding: 10px;
+    }
+
+
+    .main-area {
+        width: 100%;
+
+        margin-left: 0;
+    }
+
+
+    .top-navbar {
+        position: relative;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        padding: 16px;
+    }
+
+
+    .user-area {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+
+    .page-content {
+        padding: 18px;
+    }
+
+
+    .page-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+
+    .content-card-body {
+        padding: 18px;
+    }
+
+
+    .footer-content {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .footer-right {
+        align-items: flex-start;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .sidebar-nav {
+        grid-template-columns: 1fr;
+    }
+
+
+    .user-info {
+        font-size: 12px;
+    }
+
+
+    .logout-btn {
+        padding: 6px 10px;
+
+        font-size: 12px;
+    }
+
+
+    .page-content {
+        padding: 14px;
+    }
+
+
+    .page-header h1 {
+        font-size: 21px;
+    }
+
+
+    .content-card-header {
+        padding: 16px;
+    }
+
+
+    .content-card-body {
+        padding: 15px;
+    }
+
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+
+    .site-footer {
+        padding: 18px;
+    }
+
+}
+    </style>
+
+<div class="admin-layout">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+
+            <div class="sidebar-logo">
+                ATBU
+            </div>
+
+            <div>
+
+                <h5>
+                    ATBU Timetable
+                </h5>
+
+                <small>
+                    Computer Science
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="{{ url_for('main.admin_dashboard') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('departments.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">▣</span>
+                <span>Departments</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('programmes.index') }}"
+                class="sidebar-link active"
+            >
+                <span class="menu-icon">▤</span>
+                <span>Programmes</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('levels.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">▥</span>
+                <span>Levels</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('courses.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">▧</span>
+                <span>Courses</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('lecturers.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">♙</span>
+                <span>Lecturers</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('venues.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">⌂</span>
+                <span>Venues</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('time_slots.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">◷</span>
+                <span>Time Slots</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('semesters.index') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">◫</span>
+                <span>Semesters</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('timetable.generate') }}"
+                class="sidebar-link"
+            >
+                <span class="menu-icon">⚙</span>
+                <span>Generate Timetable</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{{ url_for('auth.logout') }}"
+                class="sidebar-link logout-link"
+            >
+                <span class="menu-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN AREA
+    ====================================================== -->
+
+    <div class="main-area">
+
+
+        <!-- =================================================
+             TOP NAVBAR
+        ================================================== -->
+
+        <header class="top-navbar">
+
+            <div>
+
+                <h6 class="mb-0">
+                    Administration
+                </h6>
+
+                <small>
+                    Intelligent Automated Timetable System
+                </small>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <span class="welcome-text">
+                        Welcome,
+                    </span>
+
+                    <strong>
+                        {{ current_user.username }}
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('auth.logout') }}"
+                    class="logout-btn"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <span class="page-label">
+                        PROGRAMMES
+                    </span>
+
+                    <h1>
+                        Add Programme
+                    </h1>
+
+                    <p>
+                        Create a new academic programme.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('programmes.index') }}"
+                    class="btn btn-outline-secondary"
+                >
+                    ← Back to Programmes
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 FLASH MESSAGES
+            ================================================== -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div
+                            class="alert alert-{{ category }} alert-dismissible fade show"
+                            role="alert"
+                        >
+
+                            {{ message }}
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"
+                            ></button>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- =================================================
+                 FORM CARD
+            ================================================== -->
+
+            <div class="content-card">
+
+                <div class="content-card-header">
+
+                    <div>
+
+                        <h5>
+                            Programme Information
+                        </h5>
+
+                        <p>
+                            Enter the details of the academic programme.
+                        </p>
+
+                    </div>
+
+                    <span class="card-icon">
+                        +
+                    </span>
+
+                </div>
+
+
+                <div class="content-card-body">
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('programmes.add') }}"
+                    >
+
+
+                        <!-- PROGRAMME NAME -->
+
+                        <div class="form-group-custom">
+
+                            <label
+                                for="name"
+                            >
+                                Programme Name
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control custom-input"
+                                placeholder="Enter programme name"
+                                value="{{ request.form.get('name', '') }}"
+                                required
+                            >
+
+                            <small>
+                                Example: B.Tech Computer Science
+                            </small>
+
+                        </div>
+
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="form-group-custom">
+
+                            <label
+                                for="department_id"
+                            >
+                                Department
+                                <span class="required">*</span>
+                            </label>
+
+                            <select
+                                class="form-select custom-input"
+                                id="department_id"
+                                name="department_id"
+                                required
+                            >
+
+                                <option value="">
+                                    -- Select Department --
+                                </option>
+
+
+                                {% for department in departments %}
+
+                                    <option
+                                        value="{{ department.id }}"
+                                        {% if request.form.get('department_id') == department.id|string %}selected{% endif %}
+                                    >
+
+                                        {{ department.name }}
+
+                                        {% if department.code %}
+                                            ({{ department.code }})
+                                        {% endif %}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+
+                            {% if not departments %}
+
+                                <div class="alert alert-warning mt-3">
+
+                                    No departments are available.
+
+                                    <a
+                                        href="{{ url_for('departments.add') }}"
+                                        class="alert-link"
+                                    >
+                                        Add a department first.
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="form-actions">
+
+                            <a
+                                href="{{ url_for('programmes.index') }}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-atbu"
+                                {% if not departments %}disabled{% endif %}
+                            >
+                                Save Programme
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- INFORMATION -->
+
+            <div class="info-box">
+
+                <div class="info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Programme Information
+                    </strong>
+
+                    <p>
+                        Make sure the programme is assigned to the
+                        correct academic department. This information
+                        will be used when managing levels, courses and
+                        timetable generation.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="site-footer">
+
+            <div class="footer-content">
+
+                <div>
+
+                    <strong>
+                        ATBU Timetable System
+                    </strong>
+
+                    <p>
+                        Intelligent Automated Timetable Generation
+                        System for Universities.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-right">
+
+                    <span>
+                        Abubakar Tafawa Balewa University
+                    </span>
+
+                    <span>
+                        © 2026 All Rights Reserved
+                    </span>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+</body>
+
+</html>

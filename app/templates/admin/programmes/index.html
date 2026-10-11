@@ -1,0 +1,298 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    Programmes - ATBU Timetable System
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="page-header">
+
+    <div>
+
+        <h2 class="page-title">
+            Programmes
+        </h2>
+
+        <p class="page-subtitle">
+            Manage academic programmes in the system.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('programmes.add') }}"
+        class="btn btn-primary"
+    >
+        + Add Programme
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     FLASH MESSAGES
+========================================================= -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =========================================================
+     PROGRAMMES CARD
+========================================================= -->
+
+<div class="content-card">
+
+    <div class="content-card-header">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h5>
+                    Programme List
+                </h5>
+
+                <p>
+                    View and manage academic programmes.
+                </p>
+
+            </div>
+
+
+            <span class="data-count">
+
+                {{ programmes|length }}
+
+                Programme{% if programmes|length != 1 %}s{% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="content-card-body p-0">
+
+
+        {% if programmes %}
+
+
+            <!-- =================================================
+                 PROGRAMMES TABLE
+            ================================================== -->
+
+            <div class="table-responsive">
+
+                <table class="table custom-table align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Programme Name
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Levels
+                            </th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for programme in programmes %}
+
+                            <tr>
+
+                                <!-- NUMBER -->
+
+                                <td>
+                                    <span class="table-number">
+                                        {{ loop.index }}
+                                    </span>
+                                </td>
+
+
+                                <!-- PROGRAMME NAME -->
+
+                                <td>
+
+                                    <strong class="item-name">
+                                        {{ programme.name }}
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- DEPARTMENT -->
+
+                                <td>
+
+                                    {% if programme.department %}
+
+                                        <span class="department-badge">
+                                            {{ programme.department.name }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            Not assigned
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- LEVELS -->
+
+                                <td>
+
+                                    <span class="count-badge">
+                                        {{ programme.levels|length }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td class="text-end">
+
+                                    <div class="table-actions">
+
+                                        <a href="{{ url_for('programmes.edit', programme_id=programme.id ) }}"
+                                            class="btn btn-sm btn-outline-primary"
+                                        >
+                                            Edit
+                                        </a>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'programmes.delete',
+                                                programme_id=programme.id
+                                            ) }}"
+                                            class="d-inline"
+                                            onsubmit="return confirm(
+                                                'Are you sure you want to delete this programme?'
+                                            );"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    📚
+                </div>
+
+
+                <h5>
+                    No programmes found
+                </h5>
+
+
+                <p>
+                    Start by adding the first academic programme.
+                </p>
+
+
+                <a
+                    href="{{ url_for('programmes.add') }}"
+                    class="btn btn-primary"
+                >
+                    + Add Programme
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
